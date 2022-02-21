@@ -1,6 +1,6 @@
 <?php
 
-namespace EasyApiBundle;
+namespace EasyApiTests;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
