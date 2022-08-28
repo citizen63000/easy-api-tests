@@ -1,8 +1,13 @@
 {
     "name": "citizen63000/easy-api-tests",
-    "type": "symfony-bundle",
-    "description": "Home OS API",
+    "description": "",
     "keywords": ["api", "rest", "tests"],
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "citizen63000"
+        }
+    ],
     "repositories": [
         {
             "type": "git",
@@ -11,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.4.3",
-        "citizen63000/easy-api-bundle": "dev-sf4",
+        "citizen63000/easy-api-bundle": "dev-master",
         "friendsofphp/php-cs-fixer": "@stable",
         "phpunit/phpunit": "6.*",
         "symfony/phpunit-bridge": "^3.0"
@@ -21,7 +26,10 @@
         "platform": {
             "php": "7.4.3"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true
+        }
     },
     "autoload": {
         "psr-4": {
