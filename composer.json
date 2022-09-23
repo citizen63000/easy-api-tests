@@ -16,7 +16,6 @@
     ],
     "require": {
         "php": ">=7.4.3",
-        "symfony/flex": "^1.19",
         "citizen63000/easy-api-bundle": "dev-master",
         "guzzlehttp/psr7": "^1.9",
         "php-http/guzzle6-adapter": "^1.1",
