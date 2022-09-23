@@ -1,8 +1,9 @@
 <?php
 
-namespace EasyApiTests\src\Framework;
+namespace EasyApiTests;
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -45,7 +46,7 @@ abstract class AbstractApiTest extends WebTestCase
     public const USER_NORULES_TEST_EMAIL = 'api-tests-no-rules@example.com';
     public const USER_NORULES_TEST_PASSWORD = 'u-norules-pwd';
 
-    public const TOKEN_ROUTE_NAME = 'fos_user_security_check';
+    public const TOKEN_ROUTE_NAME = 'api_login';
 
     public const DEBUG_LEVEL_SIMPLE = 1;
     public const DEBUG_LEVEL_ADVANCED = 2;
@@ -273,7 +274,7 @@ abstract class AbstractApiTest extends WebTestCase
 
         try {
             $logger = self::$container->get('logger');
-            $logger->err(str_replace("\t", '', $message));
+            $logger->error(str_replace("\t", '', $message));
         } catch (\Exception $exception) {
             fwrite(STDOUT, "\e[31m✘\e[91m {$exception->getMessage()}\e[0m\n");
         }
@@ -299,7 +300,7 @@ abstract class AbstractApiTest extends WebTestCase
         if (null !== $condition) {
             $qb->where($condition);
         }
-        if (null !== $parameters && !empty($parameters)) {
+        if (!empty($parameters)) {
             $qb->setParameters($parameters);
         }
 
@@ -308,26 +309,23 @@ abstract class AbstractApiTest extends WebTestCase
 
     /**
      * @param string|null $className
-     *
      * @return int
-     *
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
      */
     protected static function getLastEntityId(string $className = null): int
     {
         $tableName = self::$entityManager->getClassMetadata($className ?? static::entityClass)->getTableName();
         $schemaName = self::$entityManager->getClassMetadata($className ?? static::entityClass)->getSchemaName();
         $stmt = self::$entityManager->getConnection()->prepare("SELECT max(id) as id FROM {$schemaName}.{$tableName}");
-        $stmt->execute();
 
-        return (int) $stmt->fetchColumn(0);
+        return (int) $stmt->execute()->fetchOne(0);
     }
 
     /**
      * @param string|null $className
-     *
      * @return int|null
-     *
-     * @throws DBALException
+     * @throws DBALException|Exception
      */
     protected static function getNextEntityId(string $className = null): ?int
     {
@@ -341,7 +339,7 @@ abstract class AbstractApiTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::logStep();
         self::doSetup();
@@ -372,7 +370,7 @@ abstract class AbstractApiTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         self::logStep();
 
@@ -393,7 +391,7 @@ abstract class AbstractApiTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::logStep();
         static::$executeSetupOnAllTest = null;

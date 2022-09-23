@@ -17,9 +17,13 @@
     "require": {
         "php": ">=7.4.3",
         "citizen63000/easy-api-bundle": "dev-master",
-        "friendsofphp/php-cs-fixer": "@stable",
-        "phpunit/phpunit": "6.*",
-        "symfony/phpunit-bridge": "^3.0"
+        "phpunit/phpunit": "9.*",
+        "symfony/phpunit-bridge": "^3.4",
+        "phpunit/php-code-coverage": "9.*",
+        "symfony/browser-kit": "^4.4",
+        "symfony/web-profiler-bundle": "^4.4",
+        "symfony/debug": "^4.4",
+        "symfony/stopwatch": "^4.4"
     },
     "config": {
         "discard-changes": true,
@@ -33,7 +37,7 @@
     },
     "autoload": {
         "psr-4": {
-            "EasyApiTests\\": ""
+            "EasyApiTests\\": "src/Framework"
         }
     }
 }
