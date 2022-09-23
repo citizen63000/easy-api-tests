@@ -1,6 +1,6 @@
 <?php
 
-namespace EasyApiTests\src\Framework;
+namespace EasyApiTests;
 
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,17 +32,17 @@ class ApiOutput
     /**
      * @var Response
      */
-    private $response;
+    private Response $response;
 
     /**
      * @var Profile|null
      */
-    private $profile;
+    private ?Profile $profile;
 
     /**
      * @var string
      */
-    private $stringData;
+    private string $stringData;
 
     /**
      * @var mixed
@@ -115,29 +115,19 @@ class ApiOutput
     }
 
     /**
-     * Returns the messages of a mailer.
-     *
-     * @return \Swift_Message[] the messages
-     */
-    public function getMailerMessages(): array
-    {
-        return $this->getProfile()->getCollector('swiftmailer')->getMessages();
-    }
-
-    /**
      * Retrieves all message header values.
      * @return ResponseHeaderBag|null
      */
-    public function getHeaders()
+    public function getHeaders(): ?ResponseHeaderBag
     {
         return null !== $this->response ? $this->response->headers : null;
     }
 
     /**
      * @param $key
-     * @return null|string|string[]
+     * @return null|string
      */
-    public function getHeaderLine($key)
+    public function getHeaderLine($key): ?string
     {
         $headers = $this->getHeaders();
         return $headers ? $headers->get($key) : null;

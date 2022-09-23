@@ -1,18 +1,18 @@
 <?php
 
-namespace EasyApiTests\src\Framework;
+namespace EasyApiTests;
 
 class CommandOutput
 {
     /**
      * @var int
      */
-    private $statusCode;
+    private int $statusCode;
 
     /**
      * @var string
      */
-    private $data;
+    private string $data;
 
     /**
      * @return int
@@ -53,7 +53,7 @@ class CommandOutput
      *
      * @return array
      */
-    public function getArrayData(bool $cleanEmptyLines = false)
+    public function getArrayData(bool $cleanEmptyLines = false): array
     {
         $lines = explode("\n", $this->data);
 
