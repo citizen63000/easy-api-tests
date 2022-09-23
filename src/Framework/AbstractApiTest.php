@@ -2,7 +2,6 @@
 
 namespace EasyApiTests;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
