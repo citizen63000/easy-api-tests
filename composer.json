@@ -16,7 +16,10 @@
     ],
     "require": {
         "php": ">=7.4.3",
+        "symfony/flex": "^1.19",
         "citizen63000/easy-api-bundle": "dev-master",
+        "guzzlehttp/psr7": "^1.9",
+        "php-http/guzzle6-adapter": "^1.1",
         "phpunit/phpunit": "9.*",
         "symfony/phpunit-bridge": "^3.4",
         "phpunit/php-code-coverage": "9.*",
@@ -38,6 +41,12 @@
     "autoload": {
         "psr-4": {
             "EasyApiTests\\": "src/Framework"
+        }
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         }
     }
 }
