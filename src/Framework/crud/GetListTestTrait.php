@@ -1,8 +1,8 @@
 <?php
 
-namespace EasyApiTests\src\Util\crud;
+namespace EasyApiTests\crud;
 
-use EasyApiTests\src\Util\crud\functions\GetListTestFunctionsTrait;
+use EasyApiTests\crud\functions\GetListTestFunctionsTrait;
 
 trait GetListTestTrait
 {

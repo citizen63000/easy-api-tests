@@ -1,8 +1,8 @@
 <?php
 
-namespace EasyApiTests\src\Util\crud;
+namespace EasyApiTests\crud;
 
-use EasyApiTests\src\Util\crud\functions\AuthenticationTestFunctionsTrait;
+use EasyApiTests\crud\functions\AuthenticationTestFunctionsTrait;
 use Symfony\Component\HttpFoundation\Response;
 
 trait AuthenticationTestTrait

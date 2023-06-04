@@ -1,8 +1,8 @@
 <?php
 
-namespace EasyApiTests\src\Util\crud;
+namespace EasyApiTests\crud;
 
-use EasyApiTests\src\Util\crud\functions\CloneTestFunctionsTrait;
+use EasyApiTests\crud\functions\CloneTestFunctionsTrait;
 use Symfony\Component\HttpFoundation\Response;
 
 trait CloneTestTrait

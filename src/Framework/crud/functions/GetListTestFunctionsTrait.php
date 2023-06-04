@@ -1,6 +1,6 @@
 <?php
 
-namespace EasyApiTests\src\Util\crud\functions;
+namespace EasyApiTests\crud\functions;
 
 use EasyApiBundle\Util\ApiProblem;
 use EasyApiTests\src\Framework\ApiOutput;

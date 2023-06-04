@@ -1,8 +1,8 @@
 <?php
 
-namespace EasyApiTests\src\Util\crud;
+namespace EasyApiTests\crud;
 
-use EasyApiTests\src\Util\crud\functions\UpdateTestFunctionsTrait;
+use EasyApiTests\crud\functions\UpdateTestFunctionsTrait;
 
 /**
  * testPutExistingEntity

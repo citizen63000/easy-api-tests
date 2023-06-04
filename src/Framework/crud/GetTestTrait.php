@@ -1,13 +1,17 @@
 <?php
 
-namespace EasyApiTests\src\Util\crud;
+namespace EasyApiTests\crud;
 
-use EasyApiTests\src\Util\crud\functions\DownloadTestFunctionsTrait;
-use EasyApiTests\src\Util\crud\functions\GetTestFunctionsTrait;
+use EasyApiTests\crud\functions\GetTestFunctionsTrait;
 
-trait DownloadTestTrait
+/**
+ * testGet()
+ * testGetNotFound()
+ * testGetWithoutAuthentication()
+ * testGetWithoutRight()
+ */
+trait GetTestTrait
 {
-    use DownloadTestFunctionsTrait;
     use GetTestFunctionsTrait;
 
     protected static function initExecuteSetupOnAllTest()
@@ -16,19 +20,11 @@ trait DownloadTestTrait
     }
 
     /**
-     * @return string
-     */
-    protected static function getGetRouteName()
-    {
-        return self::getDownloadRouteName();
-    }
-
-    /**
      * GET - Nominal case.
      */
-    public function testDownload(): void
+    public function testGet(): void
     {
-        $this->doTestDownload();
+        $this->doTestGet(static::defaultEntityId);
     }
 
     /**
