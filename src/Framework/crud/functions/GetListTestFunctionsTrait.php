@@ -3,7 +3,7 @@
 namespace EasyApiTests\crud\functions;
 
 use EasyApiBundle\Util\ApiProblem;
-use EasyApiBundle\Util\Tests\ApiOutput;
+use EasyApiTests\ApiOutput;
 use Symfony\Component\HttpFoundation\Response;
 
 trait GetListTestFunctionsTrait
