@@ -2,6 +2,7 @@
     "name": "citizen63000/easy-api-tests",
     "description": "",
     "keywords": ["api", "rest", "tests"],
+    "license": "MIT",
     "type": "symfony-bundle",
     "authors": [
         {
