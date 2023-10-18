@@ -369,7 +369,7 @@ abstract class AbstractApi extends WebTestCase
     /**
      * Performs setup operations.
      */
-    final protected function doSetup(): void
+    final protected static function doSetup(): void
     {
         self::logStep();
         if (!self::isInitialized()) {
