@@ -28,7 +28,7 @@ trait ApiTestRequesterTrait
     {
         self::initializeCache();
         self::$jwtTokenAuthorizationHeaderPrefix = static::getContainer()->getParameter('jwt_token_authorization_header_prefix');
-        self::$jwsProvider = static::getContainer()->get('app.jwt_authentication.jws_provider');
+        self::$jwsProvider = static::getContainer()->get('lexik_jwt_authentication.jwt_manager');
     }
 
     /**
@@ -153,7 +153,7 @@ trait ApiTestRequesterTrait
      *
      * @param string|array $route
      */
-    protected static function getUrl($route, int $referenceType = UrlGeneratorInterface::ABSOLUTE_URL): ?string
+    protected static function getUrl(mixed $route, int $referenceType = UrlGeneratorInterface::ABSOLUTE_URL): ?string
     {
         if (is_array($route)) {
             $routeName = $route['name'] ?? '';
@@ -168,15 +168,11 @@ trait ApiTestRequesterTrait
         return $url ?? self::$router->generate($routeName, $routeParams, $referenceType);
     }
 
-    protected static function generateToken(string $username, bool $useCache = true, bool $useDefaultTokens = true): string
+    protected static function generateToken(string $username): string
     {
         $userClass = static::getContainer()->getParameter('easy_api.user_class');
         $user = static::getRepository($userClass)->findOneByUsername($username);
-        $jwsProvider = static::get('app.jwt_authentication.jws_provider');
-        $userIdentityField = static::getContainer()->getParameter('lexik_jwt_authentication.user_identity_field');
-        $userIdentityFieldGetter = 'get'.ucfirst($userIdentityField);
-        $tokenInstance = $jwsProvider->create(['roles' => $user->getRoles(), $userIdentityField => $user->$userIdentityFieldGetter()]);
-        $token = $tokenInstance->getToken();
+        $token = static::get('lexik_jwt_authentication.jwt_manager')->create($user);
 
         if (null == $token) {
             throw new Exception("Token generation failed for user $username");
@@ -192,35 +188,9 @@ trait ApiTestRequesterTrait
      *
      * @todo possible improvement : store the generated datetime for the token and compare with this date
      */
-    protected static function getToken(string $username = null, bool $useCache = true, bool $useDefaultTokens = true): string
+    protected static function getToken(string $username = null): string
     {
-        $username = $username ?? static::$user;
-        return static::generateToken($username, false);
-
-//        $useCache = $useCache ?? static::$useCache;
-//        if (null !== $username || null === static::$token) {
-//            $username = $username ?? static::$user;
-//
-//            // use default tokens to speedup login or if using external authentication
-//            if ($useDefaultTokens && isset(static::$defaultTokens[$username])) {
-//                if (!static::isTokenExpired(static::$defaultTokens[$username])) {
-//                    return static::$defaultTokens[$username];
-//                }
-//            }
-//
-//            $cachedToken = static::getCachedData("test.token.{$username}");
-//            if (!$cachedToken->isHit() || null === $cachedToken->get() || static::isTokenExpired($cachedToken->get()) || !$useCache) {
-//                static::$token = static::generateToken($username, false);
-//                if ($username === static::$user) {
-//                    $cachedToken->set(static::$token);
-//                }
-//                static::$cache->save($cachedToken);
-//            } else {
-//                static::$token = $cachedToken->get();
-//            }
-//        }
-//
-//        return static::$token;
+        return static::generateToken($username ?? static::$user);
     }
 
     protected static function isTokenExpired(string $token): bool
