@@ -15,9 +15,6 @@ trait ApiTestRequesterTrait
     /** @var string */
     protected static $jwtTokenAuthorizationHeaderPrefix;
 
-    /** @var JWSProvider */
-    protected static $jwsProvider;
-
     /** @var bool */
     protected static $useProfiler = false;
 
@@ -28,7 +25,6 @@ trait ApiTestRequesterTrait
     {
         self::initializeCache();
         self::$jwtTokenAuthorizationHeaderPrefix = static::getContainer()->getParameter('jwt_token_authorization_header_prefix');
-        self::$jwsProvider = static::getContainer()->get('lexik_jwt_authentication.jwt_manager');
     }
 
     /**
@@ -185,17 +181,10 @@ trait ApiTestRequesterTrait
      * Get authentication token.
      *
      * @throws \Exception
-     *
-     * @todo possible improvement : store the generated datetime for the token and compare with this date
      */
     protected static function getToken(string $username = null): string
     {
         return static::generateToken($username ?? static::$user);
-    }
-
-    protected static function isTokenExpired(string $token): bool
-    {
-        return self::$jwsProvider->load($token)->isExpired();
     }
 
     /**
