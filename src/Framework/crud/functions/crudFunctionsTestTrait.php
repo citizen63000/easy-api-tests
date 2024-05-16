@@ -122,7 +122,7 @@ trait crudFunctionsTestTrait
      */
     protected static function generateJson($content)
     {
-        $json = json_encode($content, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_FORCE_OBJECT|JSON_PRETTY_PRINT);
+        $json = json_encode($content, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
         return str_replace('{}', '[]', $json);
     }
@@ -159,7 +159,6 @@ trait crudFunctionsTestTrait
         foreach ($normalizedForm->getFields() as $field) {
 
             $defaultValue = '';
-
             switch ($field->getType()) {
                 case 'string':
                     if('date' === $field->getFormat()) {
@@ -184,11 +183,27 @@ trait crudFunctionsTestTrait
                     break;
                 case 'boolean':
                 case 'entity':
-                    $defaultValue = 1;
+                    $nbValues = count($field->getValues());
+                    if ('array' === $field->getFormat()) {
+                        if ($nbValues >= 2 && isset($field->getValues()[0]['id']) && isset($field->getValues()[1]['id'])) {
+                            $defaultValue = [$field->getValues()[0]['id'], $field->getValues()[1]['id']];
+                        } elseif ($nbValues == 1 && isset($field->getValues()[0]['id'])) {
+                            $defaultValue = [$field->getValues()[0]['id']];
+                        } else {
+                            $defaultValue = [1];
+                        }
+                    } else {
+                        if ($nbValues == 1) {
+                            $defaultValue = [$field->getValues()[0]['id']];
+                        } else {
+                            $defaultValue = 1;
+                        }
+                    }
                     break;
             }
             $fields[$field->getName()] = $defaultValue;
         }
+
         return $fields;
     }
 
