@@ -211,7 +211,7 @@ trait ApiTestRequesterTrait
      * @return ApiOutput
      * @throws \Exception
      */
-    public static function httpGetWithLogin($route, $userLogin, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
+    public static function httpGetWithLogin($route, ?string $userLogin = null, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
         $token = self::getToken($userLogin);
@@ -244,7 +244,7 @@ trait ApiTestRequesterTrait
      *
      * @throws \Exception
      */
-    public static function httpPostWithLogin($route, $userLogin, $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
+    public static function httpPostWithLogin($route, ?string $userLogin = null, $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
         $token = self::getToken($userLogin);
@@ -279,7 +279,7 @@ trait ApiTestRequesterTrait
      *
      * @throws \Exception
      */
-    public static function httpPutWithLogin($route, $userLogin, $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
+    public static function httpPutWithLogin($route, ?string $userLogin = null, $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
         $token = self::getToken($userLogin);
@@ -306,7 +306,7 @@ trait ApiTestRequesterTrait
      *
      * @throws \Exception
      */
-    public static function httpDeleteWithLogin($route, $userLogin, array $extraHttpHeaders = []): ApiOutput
+    public static function httpDeleteWithLogin($route, ?string $userLogin = null, array $extraHttpHeaders = []): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
         $token = self::getToken($userLogin);
