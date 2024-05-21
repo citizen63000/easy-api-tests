@@ -13,10 +13,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 trait ApiTestRequesterTrait
 {
     /** @var string */
-    protected static $jwtTokenAuthorizationHeaderPrefix;
+    protected static string $jwtTokenAuthorizationHeaderPrefix;
 
     /** @var bool */
-    protected static $useProfiler = false;
+    protected static bool $useProfiler = false;
 
     /**
      * Initialize parameters to make requests.
@@ -45,7 +45,7 @@ trait ApiTestRequesterTrait
      *
      * @param string       $method           HTTP method
      * @param string|array $route            Route to call
-     * @param null         $content          Content body if needed
+     * @param mixed        $content          Content body if needed
      * @param bool         $withToken        Defines if a token is required or not (need to login first)
      * @param string|null  $formatIn         Input data format <=> Content-type header, see {@link Format} (Default : JSON)
      * @param string|null  $formatOut        Output data format <=> Accept header, see {@link Format} (Default : JSON)
@@ -59,8 +59,8 @@ trait ApiTestRequesterTrait
      */
     public static function executeRequest(
         string $method,
-               $route,
-               $content = null,
+        array|string $route,
+        mixed $content = null,
         ?bool $withToken = true,
         ?string $formatIn = Format::JSON,
         ?string $formatOut = Format::JSON,
@@ -146,10 +146,8 @@ trait ApiTestRequesterTrait
 
     /**
      * Gets URI from Symfony route.
-     *
-     * @param string|array $route
      */
-    protected static function getUrl(mixed $route, int $referenceType = UrlGeneratorInterface::ABSOLUTE_URL): ?string
+    protected static function getUrl(array|string $route, int $referenceType = UrlGeneratorInterface::ABSOLUTE_URL): ?string
     {
         if (is_array($route)) {
             $routeName = $route['name'] ?? '';
@@ -198,20 +196,15 @@ trait ApiTestRequesterTrait
      *
      * @throws \Exception
      */
-    public static function httpGet($route, bool $withToken = true, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
+    public static function httpGet(array|string $route, bool $withToken = true, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
     {
         return self::executeRequest('GET', $route, null, $withToken, null, $formatOut, $extraHttpHeaders);
     }
 
     /**
-     * @param $route
-     * @param $userLogin
-     * @param string $formatOut
-     * @param array $extraHttpHeaders
-     * @return ApiOutput
      * @throws \Exception
      */
-    public static function httpGetWithLogin($route, ?string $userLogin = null, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
+    public static function httpGetWithLogin(array|string $route, ?string $userLogin = null, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
         $token = self::getToken($userLogin);
@@ -232,19 +225,15 @@ trait ApiTestRequesterTrait
      *
      * @throws \Exception
      */
-    public static function httpPost($route, $content = [], bool $withToken = true, string $formatIn = Format::JSON, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
+    public static function httpPost(array|string $route, mixed $content = [], bool $withToken = true, string $formatIn = Format::JSON, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
     {
         return self::executeRequest('POST', $route, $content, $withToken, $formatIn, $formatOut, $extraHttpHeaders);
     }
 
     /**
-     * @param $route
-     * @param $userLogin
-     * @param array|string $content
-     *
      * @throws \Exception
      */
-    public static function httpPostWithLogin($route, ?string $userLogin = null, $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
+    public static function httpPostWithLogin(array|string $route, ?string $userLogin = null, mixed $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
         $token = self::getToken($userLogin);
@@ -253,7 +242,7 @@ trait ApiTestRequesterTrait
     }
 
     /**
-     * Executes PUT request for an URL with a token to get.
+     * Executes PUT request for URL with a token to get.
      *
      * @param string|array $route            Route to perform the POST
      * @param mixed        $content          Content to submit
@@ -265,21 +254,15 @@ trait ApiTestRequesterTrait
      *
      * @throws \Exception
      */
-    public static function httpPut($route, $content = [], bool $withToken = true, string $formatIn = Format::JSON, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
+    public static function httpPut(array|string $route, mixed $content = [], bool $withToken = true, string $formatIn = Format::JSON, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
     {
         return self::executeRequest('PUT', $route, $content, $withToken, $formatIn, $formatOut, $extraHttpHeaders);
     }
 
     /**
-     * @param $route
-     * @param $userLogin
-     * @param array|string $content
-     * @param string $formatIn
-     * @param string $formatOut
-     *
      * @throws \Exception
      */
-    public static function httpPutWithLogin($route, ?string $userLogin = null, $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
+    public static function httpPutWithLogin(array|string $route, ?string $userLogin = null, $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
         $token = self::getToken($userLogin);
@@ -289,24 +272,19 @@ trait ApiTestRequesterTrait
 
     /**
      * Executes DELETE request for an URL with a token to get.
-     *
-     * @param string|array $route     Route to perform the DELETE
+     * @param array|string $route Route to perform the DELETE
      * @param bool         $withToken Defines if a token is required or not (need to login first)
-     *
      * @throws \Exception
      */
-    public static function httpDelete($route, bool $withToken = true, array $extraHttpHeaders = []): ApiOutput
+    public static function httpDelete(array|string $route, bool $withToken = true, array $extraHttpHeaders = []): ApiOutput
     {
         return self::executeRequest('DELETE', $route, null, $withToken, Format::JSON, Format::JSON, $extraHttpHeaders);
     }
 
     /**
-     * @param $route
-     * @param $userLogin
-     *
      * @throws \Exception
      */
-    public static function httpDeleteWithLogin($route, ?string $userLogin = null, array $extraHttpHeaders = []): ApiOutput
+    public static function httpDeleteWithLogin(array|string $route, ?string $userLogin = null, array $extraHttpHeaders = []): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
         $token = self::getToken($userLogin);
