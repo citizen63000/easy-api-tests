@@ -59,8 +59,8 @@ trait ApiTestRequesterTrait
      */
     public static function executeRequest(
         string $method,
-        $route,
-        $content = null,
+               $route,
+               $content = null,
         ?bool $withToken = true,
         ?string $formatIn = Format::JSON,
         ?string $formatOut = Format::JSON,
