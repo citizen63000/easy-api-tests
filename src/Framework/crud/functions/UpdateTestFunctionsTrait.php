@@ -69,8 +69,7 @@ trait UpdateTestFunctionsTrait
         $params += ['id' => $id];
         $data = $this->getDataSent($filename, self::$updateActionType);
         $apiOutput = self::httpPutWithLogin(['name' => static::getUpdateRouteName(), 'params' => $params], $userLogin, $data);
-        self::assertEquals($expectedStatusCode, $apiOutput->getStatusCode());
-        self::assertEquals(['errors' => $expectedErrors], $apiOutput->getData());
+        static::assertApiProblemError($apiOutput, $expectedStatusCode, $expectedErrors);
     }
 
     /**

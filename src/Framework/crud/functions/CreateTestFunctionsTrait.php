@@ -52,8 +52,7 @@ trait CreateTestFunctionsTrait
     {
         $data = $this->getDataSent($filename, self::$createActionType);
         $apiOutput = self::httpPostWithLogin(['name' => static::getCreateRouteName(), 'params' => $params], $userLogin, $data);
-        self::assertEquals($expectedStatusCode, $apiOutput->getStatusCode());
-        self::assertEquals(['errors' => $expectedErrors], $apiOutput->getData());
+        static::assertApiProblemError($apiOutput, $expectedStatusCode, $expectedErrors);
     }
 
     /**
