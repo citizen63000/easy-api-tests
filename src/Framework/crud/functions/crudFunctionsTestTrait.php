@@ -7,23 +7,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 trait crudFunctionsTestTrait
 {
-    protected static $getActionType = 'Get';
-    protected static $getListActionType = 'GetList';
-    protected static $createActionType = 'Create';
-    protected static $cloneActionType = 'Clone';
-    protected static $updateActionType = 'Update';
-    protected static $downloadActionType = 'Download';
+    protected static string $getActionType = 'Get';
+    protected static string $getListActionType = 'GetList';
+    protected static string $createActionType = 'Create';
+    protected static string $cloneActionType = 'Clone';
+    protected static string $updateActionType = 'Update';
+    protected static string $downloadActionType = 'Download';
 
-    /**
-     * @return false|string|string[]
-     */
-    protected function getCurrentDir()
+    protected function getCurrentDir(): array|bool|string|null
     {
         try {
             $rc = new \ReflectionClass($this);
             return str_replace("/{$rc->getShortName()}.php", '', $rc->getFilename());
         } catch (\Exception $e) {
             echo $e->getMessage();
+            return null;
         }
     }
 
@@ -62,12 +60,7 @@ trait crudFunctionsTestTrait
         return json_decode(file_get_contents($filePath), true);
     }
 
-    /**
-     * @param string $filename
-     * @param string $result
-     * @return false|string
-     */
-    protected function getExpectedFileResponse(string $filename, string $result)
+    protected function getExpectedFileResponse(string $filename, string $result): bool|string
     {
         $dir = "{$this->getCurrentDir()}/Responses/".self::$downloadActionType;
         $filePath = "{$dir}/{$filename}";
@@ -85,11 +78,7 @@ trait crudFunctionsTestTrait
     }
 
     /**
-     * Retrive data from file $filename or create it.
-     * @param string $filename
-     * @param string $type Create|Update
-     * @param array|null $defaultContent
-     * @return array
+     * Retrieve data from file $filename or create it.
      * @throws \Exception
      */
     protected function getDataSent(string $filename, string $type, array $defaultContent = null): array
@@ -116,21 +105,13 @@ trait crudFunctionsTestTrait
         throw new \Exception("Invalid json in file $filename");
     }
 
-    /**
-     * @param $content
-     * @return false|string|string[]
-     */
-    protected static function generateJson($content)
+    protected static function generateJson($content): array|bool|string
     {
         $json = json_encode($content, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
         return str_replace('{}', '[]', $json);
     }
 
-    /**
-     * @param string $type
-     * @return array
-     */
     protected static function generateDataSentDefault(string $type): array
     {
         $router = static::$container->get('router');
@@ -224,10 +205,7 @@ trait crudFunctionsTestTrait
         return ['name' => static::getGetRouteName(), 'params' => $params];
     }
 
-    /**
-     * @return string
-     */
-    protected static function getGetListRouteName()
+    protected static function getGetListRouteName(): string
     {
         return static::baseRouteName.'_list';
     }
@@ -241,78 +219,47 @@ trait crudFunctionsTestTrait
         return ['name' => static::getGetListRouteName(), 'params' => $params];
     }
 
-    /**
-     * @return string
-     */
-    protected static function getCreateRouteName()
+    protected static function getCreateRouteName(): string
     {
         return static::baseRouteName.'_create';
     }
 
-    /**
-     * @return string
-     */
-    protected static function getCloneRouteName()
+    protected static function getCloneRouteName(): string
     {
         return static::baseRouteName.'_clone';
     }
 
-    /**
-     * @return string
-     */
-    protected static function getUpdateRouteName()
+    protected static function getUpdateRouteName(): string
     {
         return static::baseRouteName.'_update';
     }
 
-    /**
-     * @return string
-     */
-    protected static function getDeleteRouteName()
+    protected static function getDeleteRouteName(): string
     {
         return static::baseRouteName.'_delete';
     }
 
-    /**
-     * @param array $params
-     * @return array
-     */
     protected static function generateDeleteRouteParameters(array $params = []): array
     {
         return ['name' => static::getDeleteRouteName(), 'params' => $params];
     }
 
-    /**
-     * @return string
-     */
-    protected static function getDownloadRouteName()
+    protected static function getDownloadRouteName(): string
     {
         return static::baseRouteName.'_download';
     }
 
-    /**
-     * @return string
-     */
-    protected static function getDescribeFormRouteName()
+    protected static function getDescribeFormRouteName(): string
     {
         return static::baseRouteName.'_describe_form';
     }
 
-    /**
-     * @return string
-     */
-    protected static function getDataClassShortName()
+    protected static function getDataClassShortName(): string
     {
         return lcfirst(substr(static::entityClass, strrpos(static::entityClass, '\\') + 1));
     }
 
-    /**
-     * @param int $id
-     * @param string $filename
-     * @param string|null $userLogin
-
-     */
-    protected function doTestGetAfterSave(int $id, string $filename, string $userLogin = null)
+    protected function doTestGetAfterSave(int $id, string $filename, string $userLogin = null): void
     {
         $apiOutput = self::httpGetWithLogin(['name' => static::getGetRouteName(), 'params' => ['id' => $id]], $userLogin);
         static::assertEquals(Response::HTTP_OK, $apiOutput->getStatusCode());
