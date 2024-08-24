@@ -2,7 +2,7 @@
 
 namespace EasyApiTests\crud\functions;
 
-use EasyApiBundle\Util\ApiProblem;
+use EasyApiCore\Util\ApiProblem;
 use Symfony\Component\HttpFoundation\Response;
 
 trait CreateTestFunctionsTrait

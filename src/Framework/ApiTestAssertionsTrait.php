@@ -2,7 +2,7 @@
 
 namespace EasyApiTests;
 
-use EasyApiBundle\Util\ApiProblem;
+use EasyApiCore\Util\ApiProblem;
 
 trait ApiTestAssertionsTrait
 {
@@ -104,7 +104,7 @@ trait ApiTestAssertionsTrait
     }
 
     /**
-     * Asserts that entity contains exactly theses fields.
+     * Asserts that entity contains exactly these fields.
      *
      * @param array $fields Expected fields
      * @param array $entity JSON entity as array
