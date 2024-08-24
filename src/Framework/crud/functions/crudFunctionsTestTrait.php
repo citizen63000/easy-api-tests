@@ -2,7 +2,7 @@
 
 namespace EasyApiTests\crud\functions;
 
-use EasyApiBundle\Util\Forms\FormSerializer;
+use EasyApiCore\Util\Forms\FormSerializer;
 use Symfony\Component\HttpFoundation\Response;
 
 trait crudFunctionsTestTrait
