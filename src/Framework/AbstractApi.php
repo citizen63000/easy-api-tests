@@ -5,6 +5,7 @@ namespace EasyApiTests;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -19,45 +20,40 @@ abstract class AbstractApi extends WebTestCase
 
     // region Constants
 
-    protected const baseRouteName = null;
-    protected const entityClass = null;
+    protected const ?string baseRouteName = null;
+    protected const ?string entityClass = null;
 
     /** @var array associative array with error message or fields list for example ['firstname', 'age' => 'core.error.age.invalid'] */
-    protected const requiredFields = [];
-    protected const defaultEntityId = 1;
+    protected const array requiredFields = [];
+    protected const int defaultEntityId = 1;
 
-    public const USER_TEST_ID = 1;
-    public const USER_TEST_USERNAME = '[API-TESTS]';
-    public const USER_TEST_EMAIL = 'api-tests@example.com';
-    public const USER_TEST_PASSWORD = 'IloveToBreakYourHopes!';
+    public const int USER_TEST_ID = 1;
+    public const string USER_TEST_USERNAME = '[API-TESTS]';
+    public const string USER_TEST_EMAIL = 'api-tests@example.com';
+    public const string USER_TEST_PASSWORD = 'IloveToBreakYourHopes!';
+    public const int USER_ADMIN_TEST_ID = 2;
+    public const string USER_ADMIN_TEST_USERNAME = '[API-TESTS-ADMIN]';
+    public const string USER_ADMIN_TEST_EMAIL = 'api-tests-admin@example.com';
+    public const string USER_ADMIN_TEST_PASSWORD = 'IloveToBreakYourHopes!';
+    public const int USER_NORULES_ADMIN_TEST_ID = 3;
+    public const string USER_NORULES_TEST_USERNAME = '[API-TESTS-NO-RULES]';
+    public const string USER_NORULES_TEST_EMAIL = 'api-tests-no-rules@example.com';
+    public const string USER_NORULES_TEST_PASSWORD = 'u-norules-pwd';
 
-    public const USER_ADMIN_TEST_ID = 2;
-    public const USER_ADMIN_TEST_USERNAME = '[API-TESTS-ADMIN]';
-    public const USER_ADMIN_TEST_EMAIL = 'api-tests-admin@example.com';
-    public const USER_ADMIN_TEST_PASSWORD = 'IloveToBreakYourHopes!';
+    public const string TOKEN_ROUTE_NAME = 'api_login';
 
-    public const USER_NORULES_ADMIN_TEST_ID = 3;
-    public const USER_NORULES_TEST_USERNAME = '[API-TESTS-NO-RULES]';
-    public const USER_NORULES_TEST_EMAIL = 'api-tests-no-rules@example.com';
-    public const USER_NORULES_TEST_PASSWORD = 'u-norules-pwd';
+    public const int DEBUG_LEVEL_SIMPLE = 1;
+    public const int DEBUG_LEVEL_ADVANCED = 2;
 
-    public const TOKEN_ROUTE_NAME = 'api_login';
+    public const string ARTIFACT_DIR = DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'artifacts';
 
-    public const DEBUG_LEVEL_SIMPLE = 1;
-    public const DEBUG_LEVEL_ADVANCED = 2;
+    protected const array initFiles = ['init.yml'];
 
-    public const ARTIFACT_DIR = DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'artifacts';
-
-    protected const initFiles = ['init.yml'];
-
-    /** @var string */
-    public const regexp_uuid = '[a-zA-Z0-9]+\-[a-zA-Z0-9]+\-[a-zA-Z0-9]+\-[a-zA-Z0-9]+\-[a-zA-Z0-9]+';
-
-    /** @var string */
-    public const regexp_uid = '[a-zA-Z0-9]+';
+    public const string regexp_uuid = '[a-zA-Z0-9]+\-[a-zA-Z0-9]+\-[a-zA-Z0-9]+\-[a-zA-Z0-9]+\-[a-zA-Z0-9]+';
+    public const string regexp_uid = '[a-zA-Z0-9]+';
 
     /** @var string[] */
-    protected const assessableFunctions = [
+    protected const array assessableFunctions = [
         'assertDateTime',
         'assertDate',
         'assertDateTimeNow',
@@ -70,58 +66,38 @@ abstract class AbstractApi extends WebTestCase
 
     // region Settings
 
-    protected static $artifactTestDir = null;
-
-    /** @var array */
-    protected static $additionalInitFiles = [];
-
-    /** @var array */
-    protected static $additionalAssessableFunctions = [];
+    protected static ?string $artifactTestDir = null;
+    protected static array $additionalInitFiles = [];
+    protected static array $additionalAssessableFunctions = [];
 
     /**
-     * @var bool
      * @todo set private in php 7.4
      */
-    protected static $debug = false;
-
-    /** @var int */
-    protected static $debugLevel = self::DEBUG_LEVEL_ADVANCED;
-
-    /** @var bool */
-    protected static $showQuery = false;
-
-    /** @var int */
-    protected static $debugTop = 0;
-
-    /** @var array */
-    public static $defaultTokens = [];
+    protected static bool $debug = false;
+    protected static int $debugLevel = self::DEBUG_LEVEL_ADVANCED;
+    protected static bool $showQuery = false;
+    protected static int $debugTop = 0;
+    public static array $defaultTokens = [];
 
     /**
      * Symfony env, should be TEST.
-     * @var string
      */
-    protected static $env = 'TEST';
+    protected static ?string $env = 'TEST';
 
     /**
      * Indicates if you want launch setup on all tests in your test class.
-     *
-     * @var bool|null
      */
-    protected static $executeSetupOnAllTest = null;
+    protected static ?bool $executeSetupOnAllTest = null;
 
     /**
      * Indicates if you want launch setup on all tests in your test class.
-     *
-     * @var bool
      */
-    protected static $loadDataOnSetup = null;
+    protected static ?bool $loadDataOnSetup = null;
 
     /**
      * Indicates if the first launch need to launch.
-     *
-     * @var bool
      */
-    protected static $launchFirstSetup = true;
+    protected static bool $launchFirstSetup = true;
 
     // endregion
 
@@ -129,24 +105,16 @@ abstract class AbstractApi extends WebTestCase
 
     /**
      * User API username.
-     *
-     * @var string
      */
-    protected static $user = self::USER_TEST_USERNAME;
-
+    protected static ?string $user = self::USER_TEST_USERNAME;
     /**
      * User API password.
-     *
-     * @var string
      */
-    protected static $password = self::USER_TEST_PASSWORD;
-
+    protected static ?string $password = self::USER_TEST_PASSWORD;
     /**
      * User API token.
-     *
-     * @var string
      */
-    protected static $token;
+    protected static ?string $token;
 
     // endregion
 
@@ -156,12 +124,8 @@ abstract class AbstractApi extends WebTestCase
      * simulates a browser and makes requests to a Kernel object.
      */
     protected static ?KernelBrowser $client = null;
-
-    /** @var Router */
-    protected static $router;
-
-    /** @var string */
-    protected static $projectDir;
+    protected static ?Router $router;
+    protected static ?string $projectDir;
 
     /**
      * Check if engine is initialized.
@@ -279,7 +243,7 @@ abstract class AbstractApi extends WebTestCase
 
     /**
      * @throws Exception
-     * @throws \Doctrine\DBAL\Exception
+     * @throws \Doctrine\DBAL\Exception|\Exception
      */
     protected static function getLastEntityId(string $className = null): int
     {
@@ -291,7 +255,7 @@ abstract class AbstractApi extends WebTestCase
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|\Doctrine\DBAL\Exception
      */
     protected static function getNextEntityId(string $className = null): ?int
     {
@@ -316,7 +280,7 @@ abstract class AbstractApi extends WebTestCase
     /**
      * Initialize $executeSetupOnAllTest, override it to change it.
      */
-    protected static function initExecuteSetupOnAllTest()
+    protected static function initExecuteSetupOnAllTest(): void
     {
         if (null === static::$executeSetupOnAllTest) {
             static::$executeSetupOnAllTest = true;
@@ -326,7 +290,7 @@ abstract class AbstractApi extends WebTestCase
     /**
      * Initialize $loadDataOnSetup, override it to change it.
      */
-    protected static function initLoadDataOnSetup()
+    protected static function initLoadDataOnSetup(): void
     {
         if (null === static::$loadDataOnSetup) {
             static::$loadDataOnSetup = true;
@@ -335,6 +299,8 @@ abstract class AbstractApi extends WebTestCase
 
     /**
      * {@inheritdoc}
+     * @throws OptimisticLockException
+     * @throws \Exception
      */
     protected function setUp(): void
     {
@@ -368,6 +334,7 @@ abstract class AbstractApi extends WebTestCase
 
     /**
      * Performs setup operations.
+     * @throws \Exception
      */
     final protected static function doSetup(): void
     {
@@ -427,7 +394,7 @@ abstract class AbstractApi extends WebTestCase
     /**
      * @return bool|string
      */
-    protected static function getArtifactFileContent(string $filename): ?string
+    protected static function getArtifactFileContent(string $filename): false|string
     {
         return file_get_contents(static::getArtifactsDir().DIRECTORY_SEPARATOR.$filename);
     }
