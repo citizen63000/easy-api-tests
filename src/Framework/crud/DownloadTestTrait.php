@@ -10,7 +10,7 @@ trait DownloadTestTrait
     use DownloadTestFunctionsTrait;
     use GetTestFunctionsTrait;
 
-    protected static function initExecuteSetupOnAllTest()
+    protected static function initExecuteSetupOnAllTest(): void
     {
         static::$executeSetupOnAllTest = false;
     }

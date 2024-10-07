@@ -9,16 +9,16 @@ trait AuthenticationTestTrait
 {
     use AuthenticationTestFunctionsTrait;
 
-    protected static $authenticateRouteName = 'fos_user_security_check';
-    protected static $refreshTokenRouteName = 'gesdinet_jwt_refresh_token';
-    protected static $logoutRouteName = 'api_logout';
+    protected static string $authenticateRouteName = 'fos_user_security_check';
+    protected static string $refreshTokenRouteName = 'gesdinet_jwt_refresh_token';
+    protected static string $logoutRouteName = 'api_logout';
 
-    protected static function initExecuteSetupOnAllTest()
+    protected static function initExecuteSetupOnAllTest(): void
     {
         static::$executeSetupOnAllTest = false;
     }
 
-    public function testAuthenticateWithGoodCredentials()
+    public function testAuthenticateWithGoodCredentials(): void
     {
         $params = ['username' => static::USER_TEST_USERNAME, 'password' => static::USER_TEST_PASSWORD];
 
@@ -30,7 +30,7 @@ trait AuthenticationTestTrait
         self::checkAuthenticateResponse($apiOutput->getData());
     }
 
-    public function testAuthenticateWithBadCredentials()
+    public function testAuthenticateWithBadCredentials(): void
     {
         $params = [
             'username' => 'thisusernotexist',
@@ -43,7 +43,7 @@ trait AuthenticationTestTrait
         static::assertEquals(['errors' => ['core.error.bad_credentials']], $apiOutput->getData());
     }
 
-    public function testRefreshToken()
+    public function testRefreshToken(): void
     {
         $params = ['username' => static::USER_TEST_USERNAME, 'password' => static::USER_TEST_PASSWORD];
 
@@ -59,7 +59,7 @@ trait AuthenticationTestTrait
         self::checkAuthenticateResponse($apiOutput->getData());
     }
 
-    public function testRefreshTokenWithBadRefreshToken()
+    public function testRefreshTokenWithBadRefreshToken(): void
     {
         // Request
         $apiOutput = self::httpPost(['name' => static::$refreshTokenRouteName], ['refreshToken' => 'imfakerefreshtoken'], false);
@@ -67,7 +67,7 @@ trait AuthenticationTestTrait
         static::assertEquals(['errors' => ['core.error.bad_credentials']], $apiOutput->getData());
     }
 
-    public function testLogout()
+    public function testLogout(): void
     {
         $apiOutput = self::httpPost(['name' => static::$logoutRouteName]);
         static::assertEquals(Response::HTTP_NO_CONTENT, $apiOutput->getStatusCode());

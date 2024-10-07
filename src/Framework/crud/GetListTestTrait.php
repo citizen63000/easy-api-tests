@@ -11,7 +11,7 @@ trait GetListTestTrait
     protected static $paginationPage = 2;
     protected static $paginationLimit = 3;
 
-    protected static function initExecuteSetupOnAllTest()
+    protected static function initExecuteSetupOnAllTest(): void
     {
         static::$executeSetupOnAllTest = false;
     }

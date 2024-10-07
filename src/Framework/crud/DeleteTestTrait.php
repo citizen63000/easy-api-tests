@@ -8,7 +8,7 @@ trait DeleteTestTrait
 {
     use DeleteTestFunctionsTrait;
 
-    protected static function initExecuteSetupOnAllTest()
+    protected static function initExecuteSetupOnAllTest(): void
     {
         static::$executeSetupOnAllTest = false;
     }
