@@ -191,7 +191,7 @@ trait crudFunctionsTestTrait
     /**
      * @return string
      */
-    protected static function getGetRouteName()
+    protected static function getGetRouteName(): string
     {
         return static::baseRouteName.'_get';
     }
