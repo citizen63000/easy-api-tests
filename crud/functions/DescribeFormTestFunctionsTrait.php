@@ -18,11 +18,6 @@ trait DescribeFormTestFunctionsTrait
         static::$executeSetupOnAllTest = false;
     }
 
-    /**
-     * @param string $method
-     * @param array $params
-     * @param string|null $userLogin
-     */
     protected function doGetTest(string $method, array $params = [], string $userLogin = null)
     {
         $params['method'] = $method;
@@ -39,9 +34,6 @@ trait DescribeFormTestFunctionsTrait
 
     /**
      * Nominal case for post form.
-     * @param array $params
-     * @param string|null $userLogin
-
      */
     public function doTestGetDescribeFormForPost(array $params = [], string $userLogin = null): void
     {
@@ -50,9 +42,6 @@ trait DescribeFormTestFunctionsTrait
 
     /**
      * Nominal case for put form.
-     * @param array $params
-     * @param string|null $userLogin
-
      */
     public function doTestGetDescribeFormForPut(array $params = [], string $userLogin = null): void
     {
@@ -61,7 +50,6 @@ trait DescribeFormTestFunctionsTrait
 
     /**
      * GET - Error case - 401 - Without authentication.
-     * @param array $params
      */
     public function doTestGetDescribeFormWithoutAuthentication(array $params = []): void
     {
@@ -71,9 +59,6 @@ trait DescribeFormTestFunctionsTrait
 
     /**
      * GET - Error case - 403 - Missing ADMIN role.
-     * @param string|null $userLogin
-
-     * @param array $params
      */
     public function doTestGetDescribeFormWithoutRight(string $userLogin = null, array $params = []): void
     {

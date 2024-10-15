@@ -11,23 +11,13 @@ trait DownloadTestFunctionsTrait
 
     /**
      * GET - Nominal case.
-     * @param int|null $id
-     * @param string|null $filename
-     * @param string|null $folder
-     * @param string|null $userLogin
-
      */
-    public function doTestDownload(int $id = null, string $filename = null, string $folder = null, string $userLogin = null): void
+    public function doTestDownload(string $id = null, string $filename = null, string $folder = null, string $userLogin = null): void
     {
-        self::doTestGenericDownload(['id' => $id ?? static::defaultEntityId], $filename, $folder, $userLogin);
+        self::doTestGenericDownload([static::identifier => $id ?? static::defaultEntityId], $filename, $folder, $userLogin);
     }
 
     /**
-     * @param array $params
-     * @param string|null $filename
-     * @param string|null $folder
-     * @param string|null $userLogin
-
      * @todo dev comment lines
      */
     public function doTestGenericDownload(array $params = [], string $filename = null, string $folder = null, string $userLogin = null)

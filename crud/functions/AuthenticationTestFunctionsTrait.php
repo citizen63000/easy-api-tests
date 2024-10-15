@@ -8,9 +8,6 @@ trait AuthenticationTestFunctionsTrait
 {
     use crudFunctionsTestTrait;
 
-    /**
-     * @param array $response
-     */
     protected function checkAuthenticateResponse(array $response): void
     {
         self::arrayHasKey('token', $response);
@@ -18,9 +15,6 @@ trait AuthenticationTestFunctionsTrait
         self::checkPayloadContent($token = JWS::load($response['token'])->getPayload());
     }
 
-    /**
-     * @param array $payload
-     */
     protected function checkPayloadContent(array $payload): void
     {
         self::assertArrayHasKey('iat', $payload);

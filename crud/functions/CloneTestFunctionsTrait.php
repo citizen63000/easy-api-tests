@@ -11,17 +11,11 @@ trait CloneTestFunctionsTrait
 
     /**
      * POST - Nominal case.
-     * @param int|null $id
-     * @param string $filename
-     * @param array $params
-     * @param bool $testGetAfterClone
-     * @param string|null $userLogin
-
      */
-    protected function doTestClone(int $id = null, string $filename = 'clone.json', array $params = [], bool $testGetAfterClone = true, string $userLogin = null): void
+    protected function doTestClone(string $id = null, string $filename = 'clone.json', array $params = [], bool $testGetAfterClone = true, string $userLogin = null): void
     {
         // Request
-        $params += ['id' => $id ?? static::defaultEntityId];
+        $params += [static::identifier => $id ?? static::defaultEntityId];
         $apiOutput = self::httpPostWithLogin(['name' => static::getCloneRouteName(), 'params' => $params], $userLogin);
 
         // Assert result
@@ -39,11 +33,10 @@ trait CloneTestFunctionsTrait
 
     /**
      * POST - Error case - 401 - Without authentication.
-     * @param array $params
      */
     protected function doTestCloneWithoutAuthentication(array $params = []): void
     {
-        $params += ['id' => $id ?? static::defaultEntityId];
+        $params += [static::identifier => $id ?? static::defaultEntityId];
         $apiOutput = self::httpPost(['name' => static::getCloneRouteName(), 'params' => $params], [], false);
         static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [ApiProblem::JWT_NOT_FOUND]);
     }
@@ -56,7 +49,7 @@ trait CloneTestFunctionsTrait
      */
     protected function doTestCloneWithoutRight(array $params = [], string $userLogin = null): void
     {
-        $params += ['id' => $id ?? static::defaultEntityId];
+        $params += [static::identifier => $id ?? static::defaultEntityId];
 
         if (null === $userLogin) {
             $userLogin = static::USER_NORULES_TEST_USERNAME;
@@ -69,17 +62,11 @@ trait CloneTestFunctionsTrait
 
     /**
      * POST - Error case - 403 - Forbidden action.
-     * @param int|null $id
-     * @param array $params
-     * @param string|null $userLogin
-
-     * @param array $messages
-     * @param int $errorCode
      * @throws \Exception
      */
-    protected function doTestCloneForbiddenAction(int $id = null, array $params = [], string $userLogin = null, $messages = [ApiProblem::RESTRICTED_ACCESS], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void
+    protected function doTestCloneForbiddenAction(string $id = null, array $params = [], string $userLogin = null, $messages = [ApiProblem::RESTRICTED_ACCESS], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void
     {
-        $params += ['id' => $id ?? static::defaultEntityId];
+        $params += [static::identifier => $id ?? static::defaultEntityId];
 
         $apiOutput = self::httpPostWithLogin(['name' => static::getCloneRouteName(), 'params' => $params], $userLogin);
 

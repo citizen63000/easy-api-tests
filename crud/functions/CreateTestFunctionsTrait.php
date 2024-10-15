@@ -40,12 +40,6 @@ trait CreateTestFunctionsTrait
 
     /**
      * Test Invalid submitted data case, fox example invalid data in a field with constraint
-     * @param string $filename
-     * @param array $params
-     * @param array $expectedErrors
-     * @param int $expectedStatusCode
-     * @param string|null $userLogin
-
      * @throws \Exception
      */
     protected function doTestCreateInvalid(string $filename, array $params = [], array $expectedErrors, int $expectedStatusCode = Response::HTTP_UNPROCESSABLE_ENTITY, string $userLogin = null): void
@@ -57,7 +51,6 @@ trait CreateTestFunctionsTrait
 
     /**
      * POST - Error case - 401 - Without authentication.
-     * @param array $params
      */
     protected function doTestCreateWithoutAuthentication(array $params = []): void
     {
@@ -67,9 +60,6 @@ trait CreateTestFunctionsTrait
 
     /**
      * POST - Error case - 403 - Missing right.
-     * @param array $params
-     * @param string|null $userLogin
-
      */
     protected function doTestCreateWithoutRight(array $params = [], string $userLogin = null): void
     {
@@ -84,12 +74,6 @@ trait CreateTestFunctionsTrait
 
     /**
      * POST - Error case - 403 - Forbidden action.
-     * @param string|null $filename
-     * @param array $params
-     * @param string|null $userLogin
-
-     * @param array $messages
-     * @param int $errorCode
      * @throws \Exception
      */
     protected function doTestCreateForbiddenAction(string $filename = null, array $params = [], string $userLogin = null, array $messages = [ApiProblem::RESTRICTED_ACCESS], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void

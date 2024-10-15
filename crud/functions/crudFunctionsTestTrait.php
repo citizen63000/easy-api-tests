@@ -25,13 +25,6 @@ trait crudFunctionsTestTrait
         }
     }
 
-    /**
-     * @param string $filename
-     * @param string $type Get|GetList|Create|Update
-     * @param array $result result in json
-     * @param bool $dateProtection
-     * @return array
-     */
     protected function getExpectedResponse(string $filename, string $type, array $result, bool $dateProtection = false): array
     {
         $dir = "{$this->getCurrentDir()}/Responses/{$type}";
@@ -188,18 +181,11 @@ trait crudFunctionsTestTrait
         return $fields;
     }
 
-    /**
-     * @return string
-     */
     protected static function getGetRouteName(): string
     {
         return static::baseRouteName.'_get';
     }
 
-    /**
-     * @param array $params
-     * @return array
-     */
     protected static function generateGetRouteParameters(array $params = []): array
     {
         return ['name' => static::getGetRouteName(), 'params' => $params];
@@ -210,10 +196,6 @@ trait crudFunctionsTestTrait
         return static::baseRouteName.'_list';
     }
 
-    /**
-     * @param array $params
-     * @return array
-     */
     protected static function generateGetListRouteParameters(array $params = []): array
     {
         return ['name' => static::getGetListRouteName(), 'params' => $params];
@@ -259,9 +241,9 @@ trait crudFunctionsTestTrait
         return lcfirst(substr(static::entityClass, strrpos(static::entityClass, '\\') + 1));
     }
 
-    protected function doTestGetAfterSave(int $id, string $filename, string $userLogin = null): void
+    protected function doTestGetAfterSave(string $id, string $filename, string $userLogin = null): void
     {
-        $apiOutput = self::httpGetWithLogin(['name' => static::getGetRouteName(), 'params' => ['id' => $id]], $userLogin);
+        $apiOutput = self::httpGetWithLogin(['name' => static::getGetRouteName(), 'params' => [static::identifier => $id]], $userLogin);
         static::assertEquals(Response::HTTP_OK, $apiOutput->getStatusCode());
         $result = $apiOutput->getData();
         $expectedResult = $this->getExpectedResponse($filename, static::$createActionType, $result, true);

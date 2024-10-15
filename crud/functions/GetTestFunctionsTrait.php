@@ -11,20 +11,12 @@ trait GetTestFunctionsTrait
 
     /**
      * GET - Nominal case.
-     * @param int|null $id
-     * @param string|null $filename
-     * @param string|null $userLogin
      */
     public function doTestGet(string $id = null, string $filename = 'nominalCase.json', string $userLogin = null): void
     {
         self::doTestGenericGet([static::identifier => $id ?? static::defaultEntityId], $filename, $userLogin);
     }
 
-    /**
-     * @param array $params
-     * @param string|null $filename
-     * @param string|null $userLogin
-     */
     public function doTestGenericGet(array $params = [], string $filename = 'nominalCase.json', string $userLogin = null)
     {
         $apiOutput = self::httpGetWithLogin(static::generateGetRouteParameters($params), $userLogin);
@@ -39,18 +31,12 @@ trait GetTestFunctionsTrait
 
     /**
      * GET - Error case - not found.
-     * @param int|null $id
-     * @param string|null $userLogin
      */
-    public function doTestGetNotFound(int $id = null, string $userLogin = null): void
+    public function doTestGetNotFound(string $id = null, string $userLogin = null): void
     {
-        self::doTestGenericGetNotFound(['id' => $id ?? 99999999], $userLogin);
+        self::doTestGenericGetNotFound([static::identifier => $id ?? 99999999], $userLogin);
     }
 
-    /**
-     * @param array $params
-     * @param string|null $userLogin
-     */
     public function doTestGenericGetNotFound(array $params = [], string $userLogin = null): void
     {
         $apiOutput = self::httpGetWithLogin(static::generateGetRouteParameters($params), $userLogin);
@@ -59,16 +45,14 @@ trait GetTestFunctionsTrait
 
     /**
      * GET - Error case - Without authentication.
-     * @param int|null $id
      */
-    public function doTestGetWithoutAuthentication(int $id = null): void
+    public function doTestGetWithoutAuthentication(string $id = null): void
     {
-        self::doTestGenericGetWithoutAuthentication(['id' => $id ?? static::defaultEntityId]);
+        self::doTestGenericGetWithoutAuthentication([static::identifier => $id ?? static::defaultEntityId]);
     }
 
     /**
      * GET - Error case - Without authentication.
-     * @param array $params
      */
     public function doTestGenericGetWithoutAuthentication(array $params = []): void
     {
@@ -78,18 +62,14 @@ trait GetTestFunctionsTrait
 
     /**
      * GET - Error case - Missing right.
-     * @param int|null $id
-     * @param string|null $userLogin
      */
-    public function doTestGetWithoutRight(int $id = null, string $userLogin = null): void
+    public function doTestGetWithoutRight(string $id = null, string $userLogin = null): void
     {
-        self::doTestGenericGetWithoutRight(['id' => $id ?? static::defaultEntityId], $userLogin);
+        self::doTestGenericGetWithoutRight([static::identifier => $id ?? static::defaultEntityId], $userLogin);
     }
 
     /**
      * GET - Error case - Missing right.
-     * @param array $params
-     * @param string|null $userLogin
      */
     public function doTestGenericGetWithoutRight(array $params = [], string $userLogin = null): void
     {

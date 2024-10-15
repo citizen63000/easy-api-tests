@@ -12,11 +12,6 @@ trait GetListTestFunctionsTrait
 
     /**
      * GET LIST - Nominal case.
-     * @param string|null $filename
-     * @param array|null $params
-     * @param string|null $userLogin
-
-     * @return ApiOutput
      */
     protected function doTestGetList(string $filename, array $params = [], string $userLogin = null): ApiOutput
     {
@@ -32,16 +27,7 @@ trait GetListTestFunctionsTrait
         return $apiOutput;
     }
 
-    /**
-     * @param string $filename
-     * @param int|null $page
-     * @param int|null $limit
-     * @param array $params
-     * @param string|null $userLogin
-
-     * @return ApiOutput
-     */
-    protected function doTestGetListPaginate(string $filename, int $page = null, int $limit = null, array $params = [], string $userLogin = null): ApiOutput
+    protected function doTestGetListPaginate(string $filename, int $page = null, int $limit = null, array $params = [], string $userLogin = null): ?ApiOutput
     {
         try {
             $pagination = [];
@@ -54,20 +40,10 @@ trait GetListTestFunctionsTrait
             return $this->doTestGetList($filename, $pagination + $params, $userLogin);
         } catch (ReflectionException $e) {
             echo $e->getMessage();
+            return null;
         }
     }
 
-    /**
-     * @param string $filename
-     * @param int|null $page
-     * @param int|null $limit
-     * @param array $filters
-     * @param string|null $sort
-     * @param array $params
-     * @param string|null $userLogin
-
-     * @return ApiOutput
-     */
     protected function doTestGetListFiltered(string $filename, int $page = null, int $limit = null, array $filters = [], string $sort = null, array $params = [], string $userLogin = null): ApiOutput
     {
         return $this->doTestGetListPaginate($filename, $page, $limit, $filters + ['sort' => $sort] + $params, $userLogin);
@@ -75,7 +51,6 @@ trait GetListTestFunctionsTrait
 
     /**
      * GET - Error case - 401 - Without authentication.
-     * @return ApiOutput
      */
     protected function doTestGetWithoutAuthentication(): ApiOutput
     {
@@ -87,9 +62,6 @@ trait GetListTestFunctionsTrait
 
     /**
      * GET - Error case - 403 - Missing right.
-     * @param string|null $userLogin
-
-     * @return ApiOutput
      */
     protected function doTestGetWithoutRight(string $userLogin = null): ApiOutput
     {
