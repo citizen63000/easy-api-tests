@@ -19,9 +19,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('easy_api_tests');
-        $rootNode
+        $treeBuilder = new TreeBuilder('easy_api');
+        $treeBuilder->getRootNode()
             ->children()
                     ->addDefaultsIfNotSet()
                     ->booleanNode('debug')->defaultTrue()->end()
