@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('easy_api');
+        $treeBuilder = new TreeBuilder('easy_api_tests');
         $treeBuilder->getRootNode()
             ->children()
                     ->addDefaultsIfNotSet()
