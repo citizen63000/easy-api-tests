@@ -22,7 +22,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('easy_api_tests');
         $treeBuilder->getRootNode()
             ->children()
-                    ->addDefaultsIfNotSet()
                     ->booleanNode('debug')->defaultTrue()->end()
                     ->scalarNode('datetime_format')->defaultValue(\DateTimeInterface::ATOM)->end()
                 ->end()
