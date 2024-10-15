@@ -3,7 +3,6 @@
 namespace EasyApiTests\crud;
 
 use EasyApiTests\crud\functions\CloneTestFunctionsTrait;
-use Symfony\Component\HttpFoundation\Response;
 
 trait CloneTestTrait
 {

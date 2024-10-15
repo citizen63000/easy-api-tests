@@ -22,7 +22,7 @@ trait ApiTestRequesterTrait
     protected static function initializeRequester(): void
     {
         self::initializeCache();
-        self::$jwtTokenAuthorizationHeaderPrefix = static::getContainer()->getParameter('jwt_token_authorization_header_prefix');
+        self::$jwtTokenAuthorizationHeaderPrefix = self::$jwtTokenAuthorizationHeaderPrefix ?? 'Bearer';
     }
 
     /**

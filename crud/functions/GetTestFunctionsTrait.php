@@ -15,9 +15,9 @@ trait GetTestFunctionsTrait
      * @param string|null $filename
      * @param string|null $userLogin
      */
-    public function doTestGet(int $id = null, string $filename = 'nominalCase.json', string $userLogin = null): void
+    public function doTestGet(string $id = null, string $filename = 'nominalCase.json', string $userLogin = null): void
     {
-        self::doTestGenericGet(['id' => $id ?? static::defaultEntityId], $filename, $userLogin);
+        self::doTestGenericGet([static::identifier => $id ?? static::defaultEntityId], $filename, $userLogin);
     }
 
     /**

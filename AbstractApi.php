@@ -25,7 +25,8 @@ abstract class AbstractApi extends WebTestCase
 
     /** @var array associative array with error message or fields list for example ['firstname', 'age' => 'core.error.age.invalid'] */
     protected const array requiredFields = [];
-    protected const int defaultEntityId = 1;
+    protected const string defaultEntityId = '1';
+    protected const string identifier = 'id';
 
     public const int USER_TEST_ID = 1;
     public const string USER_TEST_USERNAME = '[API-TESTS]';
@@ -68,6 +69,7 @@ abstract class AbstractApi extends WebTestCase
 
     protected static ?string $artifactTestDir = null;
     protected static array $additionalInitFiles = [];
+    protected static array $excludedTablesToClean = [];
     protected static array $additionalAssessableFunctions = [];
 
     /**
@@ -143,7 +145,7 @@ abstract class AbstractApi extends WebTestCase
     /**
      * Initialize engine.
      */
-    final protected static function initialize(): void
+    protected static function initialize(): void
     {
         self::logStep();
         static::rebootClient();
@@ -156,7 +158,7 @@ abstract class AbstractApi extends WebTestCase
         self::initializeRequester();
 
         global $argv;
-        static::$debug = static::getContainer()->getParameter('easy_api.tests.debug') || in_array('--debug', $argv, true);
+        static::$debug = static::getContainer()->getParameter('easy_api_tests.debug') || in_array('--debug', $argv, true);
     }
 
     protected static function rebootClient(): void
@@ -174,7 +176,7 @@ abstract class AbstractApi extends WebTestCase
      *
      * @param bool $debugNewLine Adds a new line before debug log
      */
-    final protected static function logStep(bool $debugNewLine = false): void
+    protected static function logStep(bool $debugNewLine = false): void
     {
         if (true === static::$debug) {
             $backTrace = debug_backtrace()[1];
@@ -189,7 +191,7 @@ abstract class AbstractApi extends WebTestCase
      * @param int    $debugLevel   Debug level
      * @param bool   $debugNewLine Adds a new line before debug log
      */
-    final protected static function logDebug(string $message, int $debugLevel = self::DEBUG_LEVEL_SIMPLE, bool $debugNewLine = false): void
+    protected static function logDebug(string $message, int $debugLevel = self::DEBUG_LEVEL_SIMPLE, bool $debugNewLine = false): void
     {
         if (true === static::$debug && $debugLevel <= static::$debugLevel) {
             fwrite(
@@ -206,7 +208,7 @@ abstract class AbstractApi extends WebTestCase
     /**
      * Show an error line and write it in log file.
      */
-    final protected static function logError(string $message): void
+    protected static function logError(string $message): void
     {
         fwrite(STDOUT, "\e[31m✘\e[91m {$message}\e[0m\n");
 
@@ -225,7 +227,7 @@ abstract class AbstractApi extends WebTestCase
      *
      * @throws NonUniqueResultException|NoResultException
      */
-    final protected static function countEntities(string $entityName, $condition = null, array $parameters = []): int
+    protected static function countEntities(string $entityName, $condition = null, array $parameters = []): int
     {
         $qb = static::getEntityManager()->getRepository($entityName)
             ->createQueryBuilder('a')

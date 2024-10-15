@@ -66,7 +66,7 @@ trait ApiTestDataLoaderTrait
      * @throws OptimisticLockException
      * @throws Exception
      */
-    private static function cleanDb(): void
+    protected static function cleanDb(): void
     {
         $stmt = static::getEntityManager()->getConnection()->executeQuery(self::retrieveNotEmptyTablesQuery());
         $tables = $stmt->fetchFirstColumn();
@@ -111,6 +111,11 @@ trait ApiTestDataLoaderTrait
                     AND TABLE_TYPE = 'BASE TABLE'
                     AND TABLE_NAME NOT LIKE 'ref\_%'
                     ";
+
+            if (count(static::$excludedTablesToClean)) {
+                $sqlNotToClean = implode(',', static::$excludedTablesToClean);
+                $sql .= " AND CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) NOT IN ({$sqlNotToClean})";
+            }
 
             if (count(static::$referentialsToClean)) {
                 $arrayRefs = [];
@@ -188,7 +193,7 @@ trait ApiTestDataLoaderTrait
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    final protected static function executeSQLScript(string $filename, bool $debugNewLine = false)
+    protected static function executeSQLScript(string $filename, bool $debugNewLine = false): void
     {
         $sql = file_get_contents(self::$projectDir.DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'sql'.DIRECTORY_SEPARATOR.$filename);
 
@@ -237,7 +242,12 @@ trait ApiTestDataLoaderTrait
             exit(E_CORE_ERROR);
         }
 
-        static::getEntityManager()->flush();
+        try {
+            static::getEntityManager()->flush();
+        } catch (\Exception $e) {
+            self::logError("Error on Entity Manager flush : {$e->getMessage()}");
+            exit(\E_CORE_ERROR);
+        }
     }
 
     /**

@@ -34,7 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "EasyApiTests\\": "src/Framework"
+            "EasyApiTests\\": ""
         }
     },
     "scripts": {

@@ -93,13 +93,16 @@ trait ApiTestAssertionsTrait
      * @param int       $count          List count
      * @param array     $fields         Expected fields
      */
-    protected static function assertApiEntityListResult(ApiOutput $apiOutput, int $expectedStatus, int $count, array $fields): void
+    protected static function assertApiEntityListResult(ApiOutput $apiOutput, int $expectedStatus, int $count, ?int $total, array $fields, bool $assertOnlyFields = false): void
     {
         static::assertEquals($expectedStatus, $apiOutput->getStatusCode());
         $data = $apiOutput->getData();
         static::assertCount($count, $data, "Expected list size : {$count}, get ".count($data));
+        if (null !== $total) {
+            static::assertEquals($total, $apiOutput->getHeaderLine('X-Total-Results'));
+        }
         foreach ($data as $entity) {
-            static::assertFields($fields, $entity);
+            static::assertFields($fields, $entity, $assertOnlyFields);
         }
     }
 
@@ -109,10 +112,12 @@ trait ApiTestAssertionsTrait
      * @param array $fields Expected fields
      * @param array $entity JSON entity as array
      */
-    protected static function assertFields(array $fields, array $entity): void
+    protected static function assertFields(array $fields, array $entity, bool $assertOnlyFields = false): void
     {
-        static::assertNotNull($entity, 'The entity should not be null !');
-        static::assertCount(count($fields), $entity, 'Expected field count : '.count($fields).', get '.count($entity));
+        if (!$assertOnlyFields) {
+            static::assertNotNull($entity, 'The entity should not be null !');
+            static::assertCount(count($fields), $entity, 'Expected field count : '.count($fields).', get '.count($entity));
+        }
         foreach ($fields as $field) {
             static::assertArrayHasKey($field, $entity, "Entity must have this field : {$field}");
         }
@@ -174,7 +179,7 @@ trait ApiTestAssertionsTrait
      */
     protected static function assertDateTime($key, $format, $value): void
     {
-        $expectedFormat = $format ?? static::getContainer()->getParameter('easy_api.tests.datetime_format');
+        $expectedFormat = $format ?? static::getContainer()->getParameter('easy_api_tests.datetime_format');
         $errorMessage = "Invalid date format for {$key} field: expected format {$expectedFormat}, get value '{$value}'";
         static::assertTrue(!empty($value), $errorMessage);
         $date = \DateTime::createFromFormat($expectedFormat, $value);
@@ -191,7 +196,7 @@ trait ApiTestAssertionsTrait
      */
     protected static function assertDateTimeNow(string $key, ?string $format, ?string $value)
     {
-        $expectedFormat = $format ?? static::getContainer()->getParameter('easy_api.tests.datetime_format');
+        $expectedFormat = $format ?? static::getContainer()->getParameter('easy_api_tests.datetime_format');
         $errorMessage = "Invalid date format for {$key} field: expected format {$expectedFormat}, get value '{$value}'";
         static::assertTrue(!empty($value), $errorMessage);
         $date = \DateTime::createFromFormat($expectedFormat, $value);

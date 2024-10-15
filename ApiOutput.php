@@ -3,8 +3,8 @@
 namespace EasyApiTests;
 
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Psr\Http\Message\StreamInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
@@ -29,25 +29,13 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
  */
 class ApiOutput
 {
-    /**
-     * @var Response
-     */
     private Response $response;
 
-    /**
-     * @var Profile|null
-     */
     private ?Profile $profile;
 
-    /**
-     * @var string
-     */
     private string $stringData;
 
-    /**
-     * @var mixed
-     */
-    private $data;
+    private mixed $data;
 
     /**
      * ApiOutput constructor.
