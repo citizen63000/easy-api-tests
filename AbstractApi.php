@@ -352,13 +352,13 @@ abstract class AbstractApi extends WebTestCase
     protected static function defineUserPassword(string $user = null, string $password = null): void
     {
         static::logStep();
-        if (!static::$user || !$user && !$password) {
-            static::$user = self::USER_TEST_USERNAME;
-            static::$password = self::USER_TEST_PASSWORD;
+        if (!self::$user || !$user && !$password) {
+            self::$user = self::USER_TEST_USERNAME;
+            self::$password = self::USER_TEST_PASSWORD;
         } else {
             static::logDebug("\e[32m[USR]\e[0m😀 New user : \e[32m{$user}\e[0m with password \e[32m{$password}\e[0m");
-            static::$user = $user;
-            static::$password = $password;
+            self::$user = $user;
+            self::$password = $password;
         }
 
         static::$token = null;
