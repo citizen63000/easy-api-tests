@@ -3,13 +3,16 @@
 namespace EasyApiTests\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class EasyApiTestsExtension extends Extension
 {
     /**
      * @inheritDoc
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
@@ -18,6 +21,10 @@ class EasyApiTestsExtension extends Extension
 
         // Convert config as parameters
         $this->loadParametersFromConfiguration($config, $container);
+
+        // Load services
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../config'));
+        $loader->load('services.yml');
     }
 
     /**
