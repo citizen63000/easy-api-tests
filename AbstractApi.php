@@ -342,7 +342,7 @@ abstract class AbstractApi extends WebTestCase
         if (!static::isInitialized()) {
             static::initialize();
         } else {
-            static::initExecuteSetupOnAllTest();
+            self::initExecuteSetupOnAllTest();
         }
     }
 
