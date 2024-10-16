@@ -88,7 +88,6 @@ trait ApiTestDataLoaderTrait
     }
 
     /**
-     * @return null|string
      * @throws Exception
      * @throws InvalidArgumentException
      */
@@ -113,6 +112,9 @@ trait ApiTestDataLoaderTrait
                     ";
 
             if (count(static::$excludedTablesToClean)) {
+                foreach (static::$excludedTablesToClean as $key => $tableName) {
+                    static::$excludedTablesToClean[$key] = "'{$tableName}'";
+                }
                 $sqlNotToClean = implode(',', static::$excludedTablesToClean);
                 $sql .= " AND CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) NOT IN ({$sqlNotToClean})";
             }
@@ -143,7 +145,6 @@ trait ApiTestDataLoaderTrait
     }
 
     /**
-     * @param string $filename
      * @throws \Exception
      */
     protected static function loadYaml(string $filename)
@@ -160,9 +161,9 @@ trait ApiTestDataLoaderTrait
                 $extDataFile = $matches[1];
 
                 if ('csv' === $extDataFile) {
-                    self::executeSQLQuery(self::generateLoadDataQuery($table, $file), false, static::$showQuery, $managerName);
+                    static::executeSQLQuery(static::generateLoadDataQuery($table, $file), false, static::$showQuery, $managerName);
                 } elseif ('sql' === $extDataFile) {
-                    self::executeSQLQuery(self::getSqlFileContent($file), false, static::$showQuery, $managerName);
+                    static::executeSQLQuery(static::getSqlFileContent($file), false, static::$showQuery, $managerName);
                 } else {
                     throw new \Exception("Unknow format for file '{$file}'");
                 }

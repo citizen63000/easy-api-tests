@@ -10,10 +10,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 trait ApiTestRequesterTrait
 {
-    /** @var string */
     protected static string $jwtTokenAuthorizationHeaderPrefix;
 
-    /** @var bool */
     protected static bool $useProfiler = false;
 
     /**
@@ -205,7 +203,7 @@ trait ApiTestRequesterTrait
     public static function httpGetWithLogin(array|string $route, ?string $userLogin = null, string $formatOut = Format::JSON, array $extraHttpHeaders = []): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
-        $token = self::getToken($userLogin);
+        $token = static::getToken($userLogin);
 
         return static::httpGet($route, false, $formatOut, $extraHttpHeaders + ['Authorization' => static::getAuthorizationStringFromToken($token)]);
     }
@@ -234,7 +232,7 @@ trait ApiTestRequesterTrait
     public static function httpPostWithLogin(array|string $route, ?string $userLogin = null, mixed $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
-        $token = self::getToken($userLogin);
+        $token = static::getToken($userLogin);
 
         return static::httpPost($route, $content, false, $formatIn, $formatOut, $extraHttpHeaders + ['Authorization' => static::getAuthorizationStringFromToken($token)]);
     }
@@ -263,7 +261,7 @@ trait ApiTestRequesterTrait
     public static function httpPutWithLogin(array|string $route, ?string $userLogin = null, $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
-        $token = self::getToken($userLogin);
+        $token = static::getToken($userLogin);
 
         return static::httpPut($route, $content, false, $formatIn, $formatOut, $extraHttpHeaders + ['Authorization' => static::getAuthorizationStringFromToken($token)]);
     }
@@ -285,7 +283,7 @@ trait ApiTestRequesterTrait
     public static function httpDeleteWithLogin(array|string $route, ?string $userLogin = null, array $extraHttpHeaders = []): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
-        $token = self::getToken($userLogin);
+        $token = static::getToken($userLogin);
 
         return static::httpDelete($route, false, $extraHttpHeaders + ['Authorization' => static::getAuthorizationStringFromToken($token)]);
     }
