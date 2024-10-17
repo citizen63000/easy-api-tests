@@ -27,11 +27,6 @@ class EasyApiTestsExtension extends Extension
         $loader->load('services.yml');
     }
 
-    /**
-     * @param array $loadedConfig
-     * @param ContainerBuilder $container
-     * @param string $parentKey
-     */
     protected function loadParametersFromConfiguration(array $loadedConfig, ContainerBuilder $container, string $parentKey = 'easy_api_tests'): void
     {
         foreach ($loadedConfig as $parameter => $value) {
