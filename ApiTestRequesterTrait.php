@@ -2,6 +2,7 @@
 
 namespace EasyApiTests;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use PHPUnit\Framework\Exception;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -11,8 +12,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 trait ApiTestRequesterTrait
 {
     protected static string $jwtTokenAuthorizationHeaderPrefix;
-
     protected static bool $useProfiler = false;
+    protected static ?string $userIdentityProperty = null;
 
     /**
      * Initialize parameters to make requests.
@@ -160,8 +161,8 @@ trait ApiTestRequesterTrait
 
     protected static function generateToken(string $username): string
     {
-        $userClass = static::getContainer()->getParameter('easy_api.user_class');
-        $user = static::getRepository($userClass)->findOneByUsername($username);
+        $userClass = static::getUserClass();
+        $user = static::getRepository($userClass)->findOneBy([static::getUserIdentityProperty() => $username]);
         $token = static::get('lexik_jwt_authentication.jwt_manager')->create($user);
 
         if (null == $token) {
@@ -169,6 +170,29 @@ trait ApiTestRequesterTrait
         }
 
         return $token;
+    }
+
+    protected static function getUserClass(): string
+    {
+        $userClass = static::getContainer()->getParameter('easy_api_tests.user_class');
+
+        if (null == $userClass) {
+            $userProvider = static::getContainer()->get('security.user.provider.concrete.app_user_provider');
+            $reflection = new \ReflectionMethod($userProvider, 'getClass');
+            $reflection->setAccessible(true);
+            $userClass = $reflection->invoke($userProvider);
+        }
+
+        return $userClass;
+    }
+
+    protected static function getUserIdentityProperty(): string
+    {
+        if (null === static::$userIdentityProperty) {
+            static::$userIdentityProperty = static::getContainer()->getParameter('easy_api_tests.user_identity_property');
+        }
+
+        return static::$userIdentityProperty;
     }
 
     /**

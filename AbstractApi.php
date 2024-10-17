@@ -30,15 +30,12 @@ abstract class AbstractApi extends WebTestCase
 
     public const int USER_TEST_ID = 1;
     public const string USER_TEST_USERNAME = '[API-TESTS]';
-    public const string USER_TEST_EMAIL = 'api-tests@example.com';
     public const string USER_TEST_PASSWORD = 'IloveToBreakYourHopes!';
     public const int USER_ADMIN_TEST_ID = 2;
     public const string USER_ADMIN_TEST_USERNAME = '[API-TESTS-ADMIN]';
-    public const string USER_ADMIN_TEST_EMAIL = 'api-tests-admin@example.com';
     public const string USER_ADMIN_TEST_PASSWORD = 'IloveToBreakYourHopes!';
     public const int USER_NORULES_ADMIN_TEST_ID = 3;
     public const string USER_NORULES_TEST_USERNAME = '[API-TESTS-NO-RULES]';
-    public const string USER_NORULES_TEST_EMAIL = 'api-tests-no-rules@example.com';
     public const string USER_NORULES_TEST_PASSWORD = 'u-norules-pwd';
 
     public const string TOKEN_ROUTE_NAME = 'api_login';
@@ -316,7 +313,7 @@ abstract class AbstractApi extends WebTestCase
             self::doSetup();
         } elseif (true === static::$launchFirstSetup) {
             // If no reset rollback user test & its rights
-            self::defineUserPassword();
+            static::defineUserPassword();
         }
 
         static::$launchFirstSetup = true;
@@ -353,8 +350,8 @@ abstract class AbstractApi extends WebTestCase
     {
         static::logStep();
         if (!self::$user || !$user && !$password) {
-            self::$user = self::USER_TEST_USERNAME;
-            self::$password = self::USER_TEST_PASSWORD;
+            self::$user = static::USER_TEST_USERNAME;
+            self::$password = static::USER_TEST_PASSWORD;
         } else {
             static::logDebug("\e[32m[USR]\e[0m😀 New user : \e[32m{$user}\e[0m with password \e[32m{$password}\e[0m");
             self::$user = $user;
