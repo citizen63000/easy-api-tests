@@ -109,7 +109,7 @@ trait crudFunctionsTestTrait
     {
         $router = static::$container->get('router');
 
-        if($type === self::$createActionType) {
+        if ($type === self::$createActionType) {
             $route = $router->getRouteCollection()->get(self::getCreateRouteName());
             $controllerAction = $route->getDefault('_controller');
             $controllerClassName = explode('::', $controllerAction)[0];

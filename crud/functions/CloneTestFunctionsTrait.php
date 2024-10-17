@@ -38,7 +38,7 @@ trait CloneTestFunctionsTrait
     {
         $params += [static::identifier => $id ?? static::defaultEntityId];
         $apiOutput = self::httpPost(['name' => static::getCloneRouteName(), 'params' => $params], [], false);
-        static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [ApiProblem::JWT_NOT_FOUND]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [static::getErrorMessageJwtNotFound()]);
     }
 
     /**
@@ -57,14 +57,14 @@ trait CloneTestFunctionsTrait
 
         $apiOutput = self::httpPostWithLogin(['name' => static::getCloneRouteName(), 'params' => $params], $userLogin);
 
-        static::assertApiProblemError($apiOutput, Response::HTTP_FORBIDDEN, [ApiProblem::RESTRICTED_ACCESS]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_FORBIDDEN, [static::getErrorMessageRestrictedAccess()]);
     }
 
     /**
      * POST - Error case - 403 - Forbidden action.
      * @throws \Exception
      */
-    protected function doTestCloneForbiddenAction(string $id = null, array $params = [], string $userLogin = null, $messages = [ApiProblem::RESTRICTED_ACCESS], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void
+    protected function doTestCloneForbiddenAction(string $id = null, array $params = [], string $userLogin = null, $messages = [static::getErrorMessageRestrictedAccess()], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void
     {
         $params += [static::identifier => $id ?? static::defaultEntityId];
 

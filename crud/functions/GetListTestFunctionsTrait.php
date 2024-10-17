@@ -55,7 +55,7 @@ trait GetListTestFunctionsTrait
     protected function doTestGetWithoutAuthentication(): ApiOutput
     {
         $apiOutput = self::httpGet(['name' => static::getGetListRouteName(), 'params' => []], false);
-        static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [ApiProblem::JWT_NOT_FOUND]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [static::getErrorMessageJwtNotFound()]);
 
         return $apiOutput;
     }
@@ -71,7 +71,7 @@ trait GetListTestFunctionsTrait
 
         $apiOutput = self::httpGetWithLogin(['name' => static::getGetListRouteName(), 'params' => []], $userLogin);
 
-        static::assertApiProblemError($apiOutput, Response::HTTP_FORBIDDEN, [ApiProblem::RESTRICTED_ACCESS]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_FORBIDDEN, [static::getErrorMessageRestrictedAccess()]);
 
         return $apiOutput;
     }

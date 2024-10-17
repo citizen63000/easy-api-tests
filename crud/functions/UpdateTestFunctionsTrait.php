@@ -66,7 +66,7 @@ trait UpdateTestFunctionsTrait
     {
         $params += [static::identifier => $id ?? 99999999];
         $apiOutput = self::httpPutWithLogin(['name' => static::getUpdateRouteName(), 'params' => $params], $userLogin, []);
-        static::assertApiProblemError($apiOutput, Response::HTTP_NOT_FOUND, [sprintf(ApiProblem::ENTITY_NOT_FOUND, 'entity')]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_NOT_FOUND, [static::getErrorMessageEntityNotFound()]);
     }
 
     /**
@@ -76,7 +76,7 @@ trait UpdateTestFunctionsTrait
     {
         $params += [static::identifier => $id ?? static::defaultEntityId];
         $apiOutput = self::httpPut(['name' => static::getUpdateRouteName(), 'params' => $params], [], false);
-        static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [ApiProblem::JWT_NOT_FOUND]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [static::getErrorMessageJwtNotFound()]);
     }
 
     /**
@@ -93,7 +93,7 @@ trait UpdateTestFunctionsTrait
 
         $apiOutput = self::httpPutWithLogin(['name' => static::getUpdateRouteName(), 'params' => $params], $userLogin, []);
 
-        static::assertApiProblemError($apiOutput, Response::HTTP_FORBIDDEN, [ApiProblem::RESTRICTED_ACCESS]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_FORBIDDEN, [static::getErrorMessageRestrictedAccess()]);
     }
 
     /**

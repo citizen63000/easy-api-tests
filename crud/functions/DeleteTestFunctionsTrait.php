@@ -57,7 +57,7 @@ trait DeleteTestFunctionsTrait
     public function doTestGenericDeleteNotFound(array $params, string $userLogin = null): void
     {
         $apiOutput = self::httpDeleteWithLogin(['name' => static::getDeleteRouteName(), 'params' => $params], $userLogin);
-        static::assertApiProblemError($apiOutput, Response::HTTP_NOT_FOUND, [sprintf(ApiProblem::ENTITY_NOT_FOUND, 'entity')]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_NOT_FOUND, [static::getErrorMessageEntityNotFound()]);
     }
 
     /**
@@ -74,7 +74,7 @@ trait DeleteTestFunctionsTrait
     public function doTestGenericDeleteWithoutAuthentication(array $params): void
     {
         $apiOutput = self::httpDelete(['name' => static::getDeleteRouteName(), 'params' => $params], false);
-        static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [ApiProblem::JWT_NOT_FOUND]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [static::getErrorMessageJwtNotFound()]);
     }
 
     /**
@@ -96,6 +96,6 @@ trait DeleteTestFunctionsTrait
 
         $apiOutput = self::httpDeleteWithLogin(['name' => static::getDeleteRouteName(), 'params' => $params], $userLogin);
 
-        static::assertApiProblemError($apiOutput, Response::HTTP_FORBIDDEN, [ApiProblem::RESTRICTED_ACCESS]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_FORBIDDEN, [static::getErrorMessageRestrictedAccess()]);
     }
 }

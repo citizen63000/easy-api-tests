@@ -55,7 +55,7 @@ trait CreateTestFunctionsTrait
     protected function doTestCreateWithoutAuthentication(array $params = []): void
     {
         $apiOutput = self::httpPost(['name' => static::getCreateRouteName(), 'params' => $params], [], false);
-        static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [ApiProblem::JWT_NOT_FOUND]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_UNAUTHORIZED, [static::getErrorMessageJwtNotFound()]);
     }
 
     /**
@@ -69,16 +69,18 @@ trait CreateTestFunctionsTrait
 
         $apiOutput = self::httpPostWithLogin(['name' => static::getCreateRouteName(), 'params' => $params], $userLogin);
 
-        static::assertApiProblemError($apiOutput, Response::HTTP_FORBIDDEN, [ApiProblem::RESTRICTED_ACCESS]);
+        static::assertApiProblemError($apiOutput, Response::HTTP_FORBIDDEN, [static::getErrorMessageRestrictedAccess()]);
     }
 
     /**
      * POST - Error case - 403 - Forbidden action.
      * @throws \Exception
      */
-    protected function doTestCreateForbiddenAction(string $filename = null, array $params = [], string $userLogin = null, array $messages = [ApiProblem::RESTRICTED_ACCESS], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void
+    protected function doTestCreateForbiddenAction(string $filename = null, array $params = [], string $userLogin = null, array $messages = [], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void
     {
         $data = null != $filename ? $this->getDataSent($filename, self::$createActionType) : [];
+
+        $messages = empty($messages) ? [static::getErrorMessageRestrictedAccess()] : $messages;
 
         $apiOutput = self::httpPostWithLogin(['name' => static::getCreateRouteName(), 'params' => $params], $userLogin, $data);
 

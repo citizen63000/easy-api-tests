@@ -6,6 +6,26 @@ use EasyApiCore\Util\ApiProblem;
 
 trait ApiTestAssertionsTrait
 {
+    protected const string ERROR_MESSAGE_PREFIX = ApiProblem::PREFIX;
+    protected const string ERROR_MESSAGE_ENTITY_NOT_FOUND = ApiProblem::ENTITY_NOT_FOUND;
+    protected const string ERROR_MESSAGE_JWT_NOT_FOUND = ApiProblem::JWT_NOT_FOUND;
+    protected const string ERROR_MESSAGE_RESTRICTED_ACCESS = ApiProblem::RESTRICTED_ACCESS;
+
+    protected static function getErrorMessageEntityNotFound(): string
+    {
+        return sprintf(static::ERROR_MESSAGE_ENTITY_NOT_FOUND, 'entity');
+    }
+
+    protected static function getErrorMessageJwtNotFound(): string
+    {
+        return static::ERROR_MESSAGE_JWT_NOT_FOUND;
+    }
+
+    protected static function getErrorMessageRestrictedAccess(): string
+    {
+        return static::ERROR_MESSAGE_RESTRICTED_ACCESS;
+    }
+
     /**
      * Use it to add personal assessable function, call it in setUp().
      */
@@ -62,7 +82,7 @@ trait ApiTestAssertionsTrait
         $error = $apiOutput->getData();
         static::assertArrayHasKey('errors', $error);
         array_walk($messages, static function (&$message) {
-            $message = ApiProblem::PREFIX.$message;
+            $message = static::ERROR_MESSAGE_PREFIX.$message;
         });
         static::assertArraysAreSimilar($messages, $error['errors']);
     }
