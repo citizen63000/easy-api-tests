@@ -64,7 +64,7 @@ trait UpdateTestFunctionsTrait
      */
     public function doTestUpdateNotFound(string $id = null, array $params = [], string $userLogin = null): void
     {
-        $params += [static::identifier => $id ?? 99999999];
+        $params += [static::identifier => $id ?? static::defaultEntityNotFoundId];
         $apiOutput = self::httpPutWithLogin(['name' => static::getUpdateRouteName(), 'params' => $params], $userLogin, []);
         static::assertApiProblemError($apiOutput, Response::HTTP_NOT_FOUND, [static::getErrorMessageEntityNotFound()]);
     }

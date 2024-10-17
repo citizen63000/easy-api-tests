@@ -27,7 +27,7 @@ trait DeleteTestTrait
      */
     public function testDeleteNotFound(): void
     {
-        $this->doTestDeleteNotFound(9999999);
+        $this->doTestDeleteNotFound(static::defaultEntityNotFoundId);
     }
 
     /**

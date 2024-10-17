@@ -34,7 +34,7 @@ trait GetTestFunctionsTrait
      */
     public function doTestGetNotFound(string $id = null, string $userLogin = null): void
     {
-        self::doTestGenericGetNotFound([static::identifier => $id ?? 99999999], $userLogin);
+        self::doTestGenericGetNotFound([static::identifier => $id ?? static::defaultEntityNotFoundId], $userLogin);
     }
 
     public function doTestGenericGetNotFound(array $params = [], string $userLogin = null): void

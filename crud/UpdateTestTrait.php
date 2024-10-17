@@ -27,7 +27,7 @@ trait UpdateTestTrait
      */
     public function testPutUnexistingEntity(): void
     {
-        $this->doTestUpdateNotFound(999);
+        $this->doTestUpdateNotFound(static::defaultEntityNotFoundId);
     }
 
     /**

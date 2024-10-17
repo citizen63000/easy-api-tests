@@ -26,6 +26,7 @@ abstract class AbstractApi extends WebTestCase
     /** @var array associative array with error message or fields list for example ['firstname', 'age' => 'core.error.age.invalid'] */
     protected const array requiredFields = [];
     protected const string defaultEntityId = '1';
+    protected const string defaultEntityNotFoundId = '99999999';
     protected const string identifier = 'id';
 
     public const int USER_TEST_ID = 1;
