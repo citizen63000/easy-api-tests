@@ -30,18 +30,18 @@ trait crudFunctionsTestTrait
         $dir = "{$this->getCurrentDir()}/Responses/{$type}";
         $filePath = "{$dir}/{$filename}";
 
-        if(!file_exists($filePath)) {
-            if(!is_dir($dir)) {
+        if (!file_exists($filePath)) {
+            if (!is_dir($dir)) {
                 mkdir($dir, 0777, true);
             }
 
             // created_at / updated_at fields
-            if($dateProtection) {
-                if(self::$createActionType === $type || self::$updateActionType === $type || self::$cloneActionType === $type) {
-                    if(array_key_exists('createdAt', $result)) {
+            if ($dateProtection) {
+                if (self::$createActionType === $type || self::$updateActionType === $type || self::$cloneActionType === $type) {
+                    if (array_key_exists('createdAt', $result)) {
                         $result['createdAt'] = '\assertDateTime()';
                     }
-                    if(array_key_exists('updatedAt', $result)) {
+                    if (array_key_exists('updatedAt', $result)) {
                         $result['updatedAt'] = '\assertDateTime()';
                     }
                 }
@@ -58,7 +58,7 @@ trait crudFunctionsTestTrait
         $dir = "{$this->getCurrentDir()}/Responses/".self::$downloadActionType;
         $filePath = "{$dir}/{$filename}";
 
-        if(!file_exists($filePath)) {
+        if (!file_exists($filePath)) {
 
             if (!is_dir($dir)) {
                 mkdir($dir, 0777, true);
@@ -79,19 +79,19 @@ trait crudFunctionsTestTrait
         $dir = "{$this->getCurrentDir()}/DataSent/$type";
         $filePath = "$dir/$filename";
 
-        if(!file_exists($filePath)) {
-            if(!is_dir($dir)) {
+        if (!file_exists($filePath)) {
+            if (!is_dir($dir)) {
                 mkdir($dir, 0777, true);
             }
 
-            if(null === $defaultContent) {
+            if (null === $defaultContent) {
                 $defaultContent = static::generateDataSentDefault($type);
             }
 
             file_put_contents($filePath, self::generateJson($defaultContent));
         }
 
-        if($json = json_decode(file_get_contents($filePath), true)) {
+        if ($json = json_decode(file_get_contents($filePath), true)) {
             return $json;
         }
 
