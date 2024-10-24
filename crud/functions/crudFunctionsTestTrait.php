@@ -110,12 +110,12 @@ trait crudFunctionsTestTrait
         $formClass = static::getFormClassOfRoute($type);
 
         $describer = new FormSerializer(
-            static::$container->get('form.factory'),
-            static::$container->get('router'),
-            static::$container->get('doctrine')
+            static::getContainer()->get('form.factory'),
+            static::getContainer()->get('router'),
+            static::getContainer()->get('doctrine')
         );
 
-        $normalizedForm = $describer->normalize(static::$container->get('form.factory')->create($formClass));
+        $normalizedForm = $describer->normalize(static::getContainer()->get('form.factory')->create($formClass));
 
         $fields = [];
         foreach ($normalizedForm->getFields() as $field) {
@@ -176,15 +176,14 @@ trait crudFunctionsTestTrait
     protected static function getFormClassOfRoute(string $type): ?string
     {
         // @todo https://stackoverflow.com/questions/30308137/get-use-statement-from-class
-        $router = static::$container->get('router');
 
         if ($type === self::$createActionType) {
-            $route = $router->getRouteCollection()->get(self::getCreateRouteName());
+            $route = static::$router->getRouteCollection()->get(self::getCreateRouteName());
             $controllerAction = $route->getDefault('_controller');
             $controllerClassName = explode('::', $controllerAction)[0];
             $formClass = constant("{$controllerClassName}::entityCreateTypeClass");
         } else {
-            $route = $router->getRouteCollection()->get(self::getUpdateRouteName());
+            $route = static::$router->getRouteCollection()->get(self::getUpdateRouteName());
             $controllerAction = $route->getDefault('_controller');
             $controllerClassName = explode('::', $controllerAction)[0];
             $formClass = constant("{$controllerClassName}::entityUpdateTypeClass");
