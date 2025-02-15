@@ -18,14 +18,14 @@ trait DescribeFormTestFunctionsTrait
         static::$executeSetupOnAllTest = false;
     }
 
-    protected function doGetTest(string $method, array $params = [], string $userLogin = null)
+    protected function doGetTest(string $method, array $params = [], ?string $userLogin = null, ?string $filename = null)
     {
         $params['method'] = $method;
         $apiOutput = self::httpGetWithLogin(['name' => static::getDescribeFormRouteName(), 'params' => $params], $userLogin);
 
         $result = $apiOutput->getData();
 
-        $expectedResult = $this->getExpectedResponse(strtolower($method).'.json', 'DescribeForm', $result);
+        $expectedResult = $this->getExpectedResponse($filename ?? strtolower($method).'.json', 'DescribeForm', $result);
 
         self::assertEquals(Response::HTTP_OK, $apiOutput->getStatusCode());
         static::assertAssessableContent($expectedResult, $result);
