@@ -107,27 +107,15 @@ trait crudFunctionsTestTrait
 
     protected static function generateDataSentDefault(string $type): array
     {
-        $router = static::$container->get('router');
-
-        if ($type === self::$createActionType) {
-            $route = $router->getRouteCollection()->get(self::getCreateRouteName());
-            $controllerAction = $route->getDefault('_controller');
-            $controllerClassName = explode('::', $controllerAction)[0];
-            $formClass = constant("{$controllerClassName}::entityCreateTypeClass");
-        } else {
-            $route = $router->getRouteCollection()->get(self::getUpdateRouteName());
-            $controllerAction = $route->getDefault('_controller');
-            $controllerClassName = explode('::', $controllerAction)[0];
-            $formClass = constant("{$controllerClassName}::entityUpdateTypeClass");
-        }
+        $formClass = static::getFormClassOfRoute($type);
 
         $describer = new FormSerializer(
-            static::$container->get('form.factory'),
-            static::$container->get('router'),
-            static::$container->get('doctrine')
+            static::getContainer()->get('form.factory'),
+            static::getContainer()->get('router'),
+            static::getContainer()->get('doctrine')
         );
 
-        $normalizedForm = $describer->normalize(static::$container->get('form.factory')->create($formClass));
+        $normalizedForm = $describer->normalize(static::getContainer()->get('form.factory')->create($formClass));
 
         $fields = [];
         foreach ($normalizedForm->getFields() as $field) {
@@ -159,18 +147,18 @@ trait crudFunctionsTestTrait
                 case 'entity':
                     $nbValues = count($field->getValues());
                     if ('array' === $field->getFormat()) {
-                        if ($nbValues >= 2 && isset($field->getValues()[0]['id']) && isset($field->getValues()[1]['id'])) {
-                            $defaultValue = [$field->getValues()[0]['id'], $field->getValues()[1]['id']];
-                        } elseif ($nbValues == 1 && isset($field->getValues()[0]['id'])) {
-                            $defaultValue = [$field->getValues()[0]['id']];
+                        if ($nbValues >= 2 && isset($field->getValues()[0][static::identifier]) && isset($field->getValues()[1][static::identifier])) {
+                            $defaultValue = [$field->getValues()[0][static::identifier], $field->getValues()[1][static::identifier]];
+                        } elseif ($nbValues == 1 && isset($field->getValues()[0][static::identifier])) {
+                            $defaultValue = [$field->getValues()[0][static::identifier]];
                         } else {
-                            $defaultValue = [1];
+                            $defaultValue = ['1'];
                         }
                     } else {
-                        if ($nbValues == 1) {
-                            $defaultValue = [$field->getValues()[0]['id']];
+                        if ($nbValues == '1') {
+                            $defaultValue = [$field->getValues()[0][static::identifier]];
                         } else {
-                            $defaultValue = 1;
+                            $defaultValue = '1';
                         }
                     }
                     break;
@@ -179,6 +167,29 @@ trait crudFunctionsTestTrait
         }
 
         return $fields;
+    }
+
+    /**
+     * @param string $type self::$createActionType | self::$updateActionType
+     * @return string|null
+     */
+    protected static function getFormClassOfRoute(string $type): ?string
+    {
+        // @todo https://stackoverflow.com/questions/30308137/get-use-statement-from-class
+
+        if ($type === self::$createActionType) {
+            $route = static::$router->getRouteCollection()->get(self::getCreateRouteName());
+            $controllerAction = $route->getDefault('_controller');
+            $controllerClassName = explode('::', $controllerAction)[0];
+            $formClass = constant("{$controllerClassName}::entityCreateTypeClass");
+        } else {
+            $route = static::$router->getRouteCollection()->get(self::getUpdateRouteName());
+            $controllerAction = $route->getDefault('_controller');
+            $controllerClassName = explode('::', $controllerAction)[0];
+            $formClass = constant("{$controllerClassName}::entityUpdateTypeClass");
+        }
+
+        return $formClass;
     }
 
     protected static function getGetRouteName(): string
