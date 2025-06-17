@@ -1,3 +1,3 @@
 # easy-api-tests
 
-Symfony bundle made to easilly test APIs
+Symfony bundle made to easily test APIs
