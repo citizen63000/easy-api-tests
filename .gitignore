@@ -24,3 +24,8 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+# Docker
+Dockerfile
+docker-compose.yml
+.docker/

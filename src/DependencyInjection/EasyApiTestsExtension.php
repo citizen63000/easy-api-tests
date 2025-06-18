@@ -23,7 +23,7 @@ class EasyApiTestsExtension extends Extension
         $this->loadParametersFromConfiguration($config, $container);
 
         // Load services
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
         $loader->load('services.yml');
     }
 
