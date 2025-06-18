@@ -52,7 +52,7 @@ trait CreateTestTrait
                 static::assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $apiOutput->getStatusCode());
                 static::assertEquals(['errors' => [$errorMessage]], $result);
             }
-        } elseif (static::$assertTrueInsteadOfMarkSkipped) {
+        } elseif (!static::$assertTrueInsteadOfMarkSkipped) {
             self::markTestSkipped('Cannot be tested : no required fields defined, please set static var requiredFields with required fields if necessary.');
         } else {
             static::assertTrue(true);
