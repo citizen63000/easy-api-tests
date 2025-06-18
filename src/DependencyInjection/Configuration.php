@@ -26,6 +26,7 @@ class Configuration implements ConfigurationInterface
                     ->booleanNode('debug')->defaultFalse()->end()
                     ->scalarNode('user_class')->defaultValue(null)->end()
                     ->scalarNode('user_identity_property')->defaultValue('username')->end()
+                    ->scalarNode('error_prefix')->defaultValue('core.error.')->end()
                     ->scalarNode('datetime_format')->defaultValue(\DateTimeInterface::ATOM)->end()
                 ->end()
             ->end()

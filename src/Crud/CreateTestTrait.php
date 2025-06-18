@@ -37,7 +37,7 @@ trait CreateTestTrait
 
                 if(is_int($key)) {
                     $requiredField = $value;
-                    $errorMessage = 'core.error.'.static::getDataClassShortName().".{$requiredField}.required";
+                    $errorMessage = static::$errorPrefix.static::getDataClassShortName().".{$requiredField}.required";
                 } else {
                     $requiredField = $key;
                     $errorMessage = $value;

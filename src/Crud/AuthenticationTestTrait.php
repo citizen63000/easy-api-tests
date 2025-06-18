@@ -40,7 +40,7 @@ trait AuthenticationTestTrait
         // Request
         $apiOutput = self::httpPost(['name' => static::$authenticateRouteName], $params, false);
         static::assertEquals(Response::HTTP_UNAUTHORIZED, $apiOutput->getStatusCode());
-        static::assertEquals(['errors' => ['core.error.bad_credentials']], $apiOutput->getData());
+        static::assertEquals(['errors' => [static::$errorPrefix.'bad_credentials']], $apiOutput->getData());
     }
 
     public function testRefreshToken(): void
@@ -64,7 +64,7 @@ trait AuthenticationTestTrait
         // Request
         $apiOutput = self::httpPost(['name' => static::$refreshTokenRouteName], ['refreshToken' => 'imfakerefreshtoken'], false);
         static::assertEquals(Response::HTTP_UNAUTHORIZED, $apiOutput->getStatusCode());
-        static::assertEquals(['errors' => ['core.error.bad_credentials']], $apiOutput->getData());
+        static::assertEquals(['errors' => [static::$errorPrefix.'bad_credentials']], $apiOutput->getData());
     }
 
     public function testLogout(): void

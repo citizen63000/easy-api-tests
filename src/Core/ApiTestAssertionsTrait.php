@@ -6,7 +6,6 @@ use EasyApiCore\Util\ApiProblem;
 
 trait ApiTestAssertionsTrait
 {
-    protected const string ERROR_MESSAGE_PREFIX = ApiProblem::PREFIX;
     protected const string ERROR_MESSAGE_ENTITY_NOT_FOUND = ApiProblem::ENTITY_NOT_FOUND;
     protected const string ERROR_MESSAGE_JWT_NOT_FOUND = ApiProblem::JWT_NOT_FOUND;
     protected const string ERROR_MESSAGE_RESTRICTED_ACCESS = ApiProblem::RESTRICTED_ACCESS;
@@ -82,7 +81,7 @@ trait ApiTestAssertionsTrait
         $error = $apiOutput->getData();
         static::assertArrayHasKey('errors', $error);
         array_walk($messages, static function (&$message) {
-            $message = static::ERROR_MESSAGE_PREFIX.$message;
+            $message = static::$errorPrefix.$message;
         });
         static::assertArraysAreSimilar($messages, $error['errors']);
     }

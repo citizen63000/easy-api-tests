@@ -5,9 +5,8 @@
     "license": "MIT",
     "type": "symfony-bundle",
     "authors": [
-        {
-            "name": "citizen63000"
-        }
+        {"name": "citizen63000"},
+        {"name": "DarwinOnLine"}
     ],
     "require": {
         "php": "^8.3",

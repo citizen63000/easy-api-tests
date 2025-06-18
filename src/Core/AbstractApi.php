@@ -79,6 +79,7 @@ abstract class AbstractApi extends WebTestCase
     protected static int $debugTop = 0;
     public static array $defaultTokens = [];
     protected static bool $assertTrueInsteadOfMarkSkipped = false;
+    protected static string $errorPrefix = 'core.error.';
 
     /**
      * Symfony env, should be TEST.
@@ -160,6 +161,7 @@ abstract class AbstractApi extends WebTestCase
 
         static::$debug = static::getContainer()->getParameter('easy_api_tests.debug') || in_array('--debug', $argv, true);
         static::$assertTrueInsteadOfMarkSkipped = static::getContainer()->getParameter('easy_api_tests.skipped_as_true');
+        static::$errorPrefix = static::getContainer()->getParameter('easy_api_tests.error_prefix');
     }
 
     protected static function rebootClient(): void
