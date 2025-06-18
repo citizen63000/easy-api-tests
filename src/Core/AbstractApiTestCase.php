@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-abstract class AbstractApi extends WebTestCase
+abstract class AbstractApiTestCase extends WebTestCase
 {
     use ApiTestRequesterTrait;
     use ApiTestDataLoaderTrait;
