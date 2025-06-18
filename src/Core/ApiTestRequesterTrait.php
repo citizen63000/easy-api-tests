@@ -114,7 +114,7 @@ trait ApiTestRequesterTrait
         $profilerLink = static::getProfilerLink($output);
 
         self::logDebug(
-            "\e[33m[API]\e[0m\t🌐 [\e[33m".strtoupper($method)."\e[0m]".(strlen($method) > 3 ? "\t" : "\t\t")."\e[34m{$url}\e[0m"
+            "\e[33m[API]\e[0m\t🌐 [\e[33m".strtoupper($method)."\e[0m]\t\e[34m{$url}\e[0m"
             .(self::DEBUG_LEVEL_ADVANCED === static::$debugLevel ? "\n\t\t\tHeaders sent : \e[33m".json_encode($server, true)."\e[0m" : '')
             .((null !== $content && self::DEBUG_LEVEL_ADVANCED === static::$debugLevel) ? "\n\t\t\tSubmitted data : \e[33m{$body}\e[0m" : '')
             ."\n\t\t\tResponse status : \e[33m{$output->getResponse()->getStatusCode()}\e[0m\n\t\t\tResponse headers : \e[33m".json_encode($output->getHeaders()->all(), true)."\e[0m"
