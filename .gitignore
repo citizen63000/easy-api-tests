@@ -17,4 +17,4 @@
 # Only dev
 /.idea
 /composer.lock
-/.php-cs.cache
+/.php_cs.cache
