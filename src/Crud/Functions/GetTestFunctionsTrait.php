@@ -2,22 +2,21 @@
 
 namespace EasyApiTests\Crud\Functions;
 
-use EasyApiCore\Util\ApiProblem;
 use Symfony\Component\HttpFoundation\Response;
 
 trait GetTestFunctionsTrait
 {
-    use crudFunctionsTestTrait;
+    use CrudFunctionsTestTrait;
 
     /**
      * GET - Nominal case.
      */
-    public function doTestGet(string $id = null, string $filename = 'nominalCase.json', string $userLogin = null): void
+    public function doTestGet(?string $id = null, string $filename = 'nominalCase.json', ?string $userLogin = null): void
     {
         self::doTestGenericGet([static::identifier => $id ?? static::defaultEntityId], $filename, $userLogin);
     }
 
-    public function doTestGenericGet(array $params = [], string $filename = 'nominalCase.json', string $userLogin = null)
+    public function doTestGenericGet(array $params = [], string $filename = 'nominalCase.json', ?string $userLogin = null)
     {
         $apiOutput = self::httpGetWithLogin(static::generateGetRouteParameters($params), $userLogin);
 
@@ -32,12 +31,12 @@ trait GetTestFunctionsTrait
     /**
      * GET - Error case - not found.
      */
-    public function doTestGetNotFound(string $id = null, string $userLogin = null): void
+    public function doTestGetNotFound(?string $id = null, ?string $userLogin = null): void
     {
         self::doTestGenericGetNotFound([static::identifier => $id ?? static::defaultEntityNotFoundId], $userLogin);
     }
 
-    public function doTestGenericGetNotFound(array $params = [], string $userLogin = null): void
+    public function doTestGenericGetNotFound(array $params = [], ?string $userLogin = null): void
     {
         $apiOutput = self::httpGetWithLogin(static::generateGetRouteParameters($params), $userLogin);
         static::assertApiProblemError($apiOutput, Response::HTTP_NOT_FOUND, [static::getErrorMessageEntityNotFound()]);
@@ -46,7 +45,7 @@ trait GetTestFunctionsTrait
     /**
      * GET - Error case - Without authentication.
      */
-    public function doTestGetWithoutAuthentication(string $id = null): void
+    public function doTestGetWithoutAuthentication(?string $id = null): void
     {
         self::doTestGenericGetWithoutAuthentication([static::identifier => $id ?? static::defaultEntityId]);
     }
@@ -63,7 +62,7 @@ trait GetTestFunctionsTrait
     /**
      * GET - Error case - Missing right.
      */
-    public function doTestGetWithoutRight(string $id = null, string $userLogin = null): void
+    public function doTestGetWithoutRight(?string $id = null, ?string $userLogin = null): void
     {
         self::doTestGenericGetWithoutRight([static::identifier => $id ?? static::defaultEntityId], $userLogin);
     }
@@ -71,7 +70,7 @@ trait GetTestFunctionsTrait
     /**
      * GET - Error case - Missing right.
      */
-    public function doTestGenericGetWithoutRight(array $params = [], string $userLogin = null): void
+    public function doTestGenericGetWithoutRight(array $params = [], ?string $userLogin = null): void
     {
         if (null === $userLogin) {
             $userLogin = static::USER_NORULES_TEST_USERNAME;

@@ -2,15 +2,14 @@
 
 namespace EasyApiTests\Crud\Functions;
 
-use EasyApiCore\Util\ApiProblem;
 use Symfony\Component\HttpFoundation\Response;
 
 trait DescribeFormTestFunctionsTrait
 {
-    use crudFunctionsTestTrait;
+    use CrudFunctionsTestTrait;
 
     /**
-     * Set $executeSetupOnAllTest to false
+     * Set $executeSetupOnAllTest to false.
      */
     public static function setUpBeforeClass(): void
     {
@@ -25,7 +24,7 @@ trait DescribeFormTestFunctionsTrait
 
         $result = $apiOutput->getData();
 
-        $expectedResult = $this->getExpectedResponse($filename ?? strtolower($method).'.json', 'DescribeForm', $result);
+        $expectedResult = $this->getExpectedResponse($filename ?? mb_strtolower($method).'.json', 'DescribeForm', $result);
 
         self::assertEquals(Response::HTTP_OK, $apiOutput->getStatusCode());
         static::assertAssessableContent($expectedResult, $result);
@@ -35,7 +34,7 @@ trait DescribeFormTestFunctionsTrait
     /**
      * Nominal case for post form.
      */
-    public function doTestGetDescribeFormForPost(array $params = [], string $userLogin = null): void
+    public function doTestGetDescribeFormForPost(array $params = [], ?string $userLogin = null): void
     {
         $this->doGetTest('POST', $params, $userLogin);
     }
@@ -43,7 +42,7 @@ trait DescribeFormTestFunctionsTrait
     /**
      * Nominal case for put form.
      */
-    public function doTestGetDescribeFormForPut(array $params = [], string $userLogin = null): void
+    public function doTestGetDescribeFormForPut(array $params = [], ?string $userLogin = null): void
     {
         $this->doGetTest('PUT', $params, $userLogin);
     }
@@ -60,9 +59,9 @@ trait DescribeFormTestFunctionsTrait
     /**
      * GET - Error case - 403 - Missing ADMIN role.
      */
-    public function doTestGetDescribeFormWithoutRight(string $userLogin = null, array $params = []): void
+    public function doTestGetDescribeFormWithoutRight(?string $userLogin = null, array $params = []): void
     {
-        if(null === $userLogin) {
+        if (null === $userLogin) {
             $userLogin = static::USER_NORULES_TEST_USERNAME;
         }
 

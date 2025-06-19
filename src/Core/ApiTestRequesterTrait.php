@@ -60,9 +60,9 @@ trait ApiTestRequesterTrait
         ?bool $withToken = true,
         ?string $formatIn = Format::JSON,
         ?string $formatOut = Format::JSON,
-        ?array $extraHttpHeaders = []
+        ?array $extraHttpHeaders = [],
     ): ApiOutput {
-        //Headers initialization
+        // Headers initialization
         $server = [];
 
         if (null !== $formatIn && !($content instanceof FileBag)) {
@@ -105,16 +105,15 @@ trait ApiTestRequesterTrait
         if (!$profiler) {
             if (!static::getContainer()->has('profiler')) {
                 throw new \Exception('You must enable the profiler (profiler: {collect: true }) in the configuration to use it in tests.');
-            } else {
-                throw new \Exception('Impossible to load the profiler in the client.');
             }
+            throw new \Exception('Impossible to load the profiler in the client.');
         }
 
         $output = new ApiOutput($client->getResponse(), $formatOut, $profiler);
         $profilerLink = static::getProfilerLink($output);
 
         self::logDebug(
-            "\e[33m[API]\e[0m\t🌐 [\e[33m".strtoupper($method)."\e[0m]\t\e[34m{$url}\e[0m"
+            "\e[33m[API]\e[0m\t🌐 [\e[33m".mb_strtoupper($method)."\e[0m]\t\e[34m{$url}\e[0m"
             .(self::DEBUG_LEVEL_ADVANCED === static::$debugLevel ? "\n\t\t\tHeaders sent : \e[33m".json_encode($server, true)."\e[0m" : '')
             .((null !== $content && self::DEBUG_LEVEL_ADVANCED === static::$debugLevel) ? "\n\t\t\tSubmitted data : \e[33m{$body}\e[0m" : '')
             ."\n\t\t\tResponse status : \e[33m{$output->getResponse()->getStatusCode()}\e[0m\n\t\t\tResponse headers : \e[33m".json_encode($output->getHeaders()->all(), true)."\e[0m"
@@ -134,7 +133,7 @@ trait ApiTestRequesterTrait
                 .'.php'
                 .self::$router->generate('_profiler', ['token' => $token])
                 ."\e[0m"
-                ;
+            ;
         }
 
         return '';
@@ -145,7 +144,7 @@ trait ApiTestRequesterTrait
      */
     protected static function getUrl(array|string $route, int $referenceType = UrlGeneratorInterface::ABSOLUTE_URL): ?string
     {
-        if (is_array($route)) {
+        if (\is_array($route)) {
             $routeName = $route['name'] ?? '';
             $routeParams = $route['params'] ?? [];
             $url = $route['url'] ?? null;
@@ -164,7 +163,7 @@ trait ApiTestRequesterTrait
         $user = static::getRepository($userClass)->findOneBy([static::getUserIdentityProperty() => $username]);
         $token = static::get('lexik_jwt_authentication.jwt_manager')->create($user);
 
-        if (null == $token) {
+        if (null === $token) {
             throw new Exception("Token generation failed for user $username");
         }
 
@@ -175,7 +174,7 @@ trait ApiTestRequesterTrait
     {
         $userClass = static::getContainer()->getParameter('easy_api_tests.user_class');
 
-        if (null == $userClass) {
+        if (null === $userClass) {
             $userProvider = static::getContainer()->get('security.user.provider.concrete.app_user_provider');
             $reflection = new \ReflectionMethod($userProvider, 'getClass');
             $reflection->setAccessible(true);
@@ -199,7 +198,7 @@ trait ApiTestRequesterTrait
      *
      * @throws \Exception
      */
-    protected static function getToken(string $username = null): string
+    protected static function getToken(?string $username = null): string
     {
         return static::generateToken($username ?? static::$user);
     }
@@ -291,8 +290,10 @@ trait ApiTestRequesterTrait
 
     /**
      * Executes DELETE request for an URL with a token to get.
-     * @param array|string $route Route to perform the DELETE
+     *
+     * @param array|string $route     Route to perform the DELETE
      * @param bool         $withToken Defines if a token is required or not (need to login first)
+     *
      * @throws \Exception
      */
     public static function httpDelete(array|string $route, bool $withToken = true, array $extraHttpHeaders = []): ApiOutput
@@ -324,7 +325,7 @@ trait ApiTestRequesterTrait
         $convertedArguments = [];
         foreach ($arguments as $k => $v) {
             if ('--env' !== $k || 'test' === $v) {
-                if (!is_int($k)) {
+                if (!\is_int($k)) {
                     $convertedArguments[] = "{$k}='{$v}'";
                 } else {
                     $convertedArguments[] = $v;
@@ -334,7 +335,7 @@ trait ApiTestRequesterTrait
             }
         }
 
-        if (!in_array('--env=test', $convertedArguments)) {
+        if (!\in_array('--env=test', $convertedArguments, true)) {
             $convertedArguments[] = '--env=test';
         }
 
@@ -352,7 +353,7 @@ trait ApiTestRequesterTrait
         $commandOutput->setData($strOutput);
 
         self::logDebug(
-            "\e[33m[API]\e[0m\t🌐 [\e[33m".strtoupper('Exec Command')."\e[0m]\t\t\e[34m{$command}\e[0m"
+            "\e[33m[API]\e[0m\t🌐 [\e[33m".mb_strtoupper('Exec Command')."\e[0m]\t\t\e[34m{$command}\e[0m"
             ."\n\t\t\tReturn code : \e[33m{$returnCode}\e[0m\n\t\t\tOutput : \e[33m".$strOutput."\e[0m\n\t\t\tExecution time : {$requestTotalTime} seconds\n"
         );
 
@@ -374,7 +375,7 @@ trait ApiTestRequesterTrait
         $application->setAutoExit(false);
 
         foreach ($arguments as $k => $v) {
-            if (is_int($k) && '--' !== substr($v, 0, 2)) {
+            if (\is_int($k) && '--' !== mb_substr($v, 0, 2)) {
                 throw new \Exception("you must pass the parameter name for value {$v}");
             }
         }

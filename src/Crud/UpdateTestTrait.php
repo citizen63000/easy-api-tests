@@ -8,7 +8,7 @@ use EasyApiTests\Crud\Functions\UpdateTestFunctionsTrait;
  * testPutExistingEntity
  * testPutUnexistingEntity
  * testPutWithoutAuthentication
- * testPutWithoutRight
+ * testPutWithoutRight.
  */
 trait UpdateTestTrait
 {

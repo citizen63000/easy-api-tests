@@ -13,7 +13,6 @@ trait DeleteTestTrait
         static::$executeSetupOnAllTest = false;
     }
 
-
     /**
      * DELETE - Nominal case.
      */

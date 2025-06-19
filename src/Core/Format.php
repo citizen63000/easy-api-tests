@@ -9,8 +9,8 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
 abstract class Format
 {
-    public const JSON = 'application/json';
-    public const XML = 'application/xml';
+    public const string JSON = 'application/json';
+    public const string XML = 'application/xml';
 
     protected static array $encoderFormats = [
         self::JSON => JsonEncoder::FORMAT,
@@ -18,8 +18,6 @@ abstract class Format
     ];
 
     /**
-     * @param $format
-     *
      * @return EncoderInterface|DecoderInterface
      */
     public static function getEncoder($format)
@@ -32,14 +30,11 @@ abstract class Format
             default:
         }
 
-        throw new \InvalidArgumentException(sprintf('Format "%s" unrecognized', $format));
+        throw new \InvalidArgumentException(\sprintf('Format "%s" unrecognized', $format));
     }
 
     /**
      * Write data to format.
-     *
-     * @param $data
-     * @param $format
      *
      * @return false|string
      */
@@ -50,9 +45,6 @@ abstract class Format
 
     /**
      * Write data from format.
-     *
-     * @param $data
-     * @param $format
      *
      * @return array|mixed|string
      */

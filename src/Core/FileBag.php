@@ -16,10 +16,10 @@ class FileBag
      * @param null   $fileName  The filename to the file
      * @param array  $headers   Additional headers
      */
-    public function addFile(string $fieldName, string $filePath, $fileName = null, array $headers = [])
+    public function addFile(string $fieldName, string $filePath, ?string $fileName = null, array $headers = [])
     {
         $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
-        $uploadedFile = new UploadedFile($filePath, $fileName, $mimeTypeGuesser->guessMimeType($filePath), null, true);
+        $uploadedFile = new UploadedFile($filePath, $fileName ?? basename($filePath), $mimeTypeGuesser->guessMimeType($filePath), null, true);
 
         $file = [
             'name' => $fieldName,
@@ -39,9 +39,6 @@ class FileBag
         return $this->data;
     }
 
-    /**
-     * @return array
-     */
     public function getFiles(): array
     {
         $files = [];

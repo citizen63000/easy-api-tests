@@ -13,7 +13,6 @@ trait GetDescribeFormTestTrait
         static::$executeSetupOnAllTest = false;
     }
 
-
     /**
      * Nominal case for post form.
      */

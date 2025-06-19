@@ -21,8 +21,6 @@ trait APITestCacheManagementTrait
     }
 
     /**
-     * @param $key
-     * @return mixed
      * @throws InvalidArgumentException
      */
     protected static function getCachedData($key)

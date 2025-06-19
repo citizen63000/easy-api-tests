@@ -2,17 +2,16 @@
 
 namespace EasyApiTests\Crud\Functions;
 
-use EasyApiCore\Util\ApiProblem;
 use Symfony\Component\HttpFoundation\Response;
 
 trait CloneTestFunctionsTrait
 {
-    use crudFunctionsTestTrait;
+    use CrudFunctionsTestTrait;
 
     /**
      * POST - Nominal case.
      */
-    protected function doTestClone(string $id = null, string $filename = 'clone.json', array $params = [], bool $testGetAfterClone = true, string $userLogin = null): void
+    protected function doTestClone(?string $id = null, string $filename = 'clone.json', array $params = [], bool $testGetAfterClone = true, ?string $userLogin = null): void
     {
         // Request
         $params += [static::identifier => $id ?? static::defaultEntityId];
@@ -26,7 +25,7 @@ trait CloneTestFunctionsTrait
         static::assertEquals($expectedResult, $result, "Assert failed for file {$filename}");
 
         // Get after create
-        if($testGetAfterClone) {
+        if ($testGetAfterClone) {
             $this->doTestGetAfterSave($expectedResult['id'], $filename, $userLogin);
         }
     }
@@ -43,11 +42,8 @@ trait CloneTestFunctionsTrait
 
     /**
      * POST - Error case - 403 - Missing right.
-     * @param array $params
-     * @param string|null $userLogin
-
      */
-    protected function doTestCloneWithoutRight(array $params = [], string $userLogin = null): void
+    protected function doTestCloneWithoutRight(array $params = [], ?string $userLogin = null): void
     {
         $params += [static::identifier => $id ?? static::defaultEntityId];
 
@@ -62,9 +58,10 @@ trait CloneTestFunctionsTrait
 
     /**
      * POST - Error case - 403 - Forbidden action.
+     *
      * @throws \Exception
      */
-    protected function doTestCloneForbiddenAction(string $id = null, array $params = [], string $userLogin = null, $messages = [static::getErrorMessageRestrictedAccess()], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void
+    protected function doTestCloneForbiddenAction(?string $id = null, array $params = [], ?string $userLogin = null, $messages = [static::getErrorMessageRestrictedAccess()], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void
     {
         $params += [static::identifier => $id ?? static::defaultEntityId];
 

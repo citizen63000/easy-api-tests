@@ -17,9 +17,9 @@ trait TestUtilsTrait
     abstract protected static function getContainer();
 
     /**
-     * @return object
-     *
      * @throws \Exception
+     *
+     * @return object
      */
     protected static function get(string $id, int $invalidBehavior = Container::EXCEPTION_ON_INVALID_REFERENCE)
     {
@@ -33,17 +33,17 @@ trait TestUtilsTrait
     {
         try {
             return static::getContainer()->get('doctrine');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return null;
         }
     }
 
     /**
-     * @return ObjectManager|object
-     *
      * @throws \Exception
+     *
+     * @return ObjectManager|object
      */
-    protected static function getEntityManager(string $name = null)
+    protected static function getEntityManager(?string $name = null)
     {
         return self::getDoctrine()->getManager($name);
     }
@@ -56,11 +56,6 @@ trait TestUtilsTrait
         return self::getEntityManager()->getRepository($repository);
     }
 
-    /**
-     * @param $entity
-     *
-     * @return mixed
-     */
     protected static function persistAndFlush($entity)
     {
         $em = self::getEntityManager();

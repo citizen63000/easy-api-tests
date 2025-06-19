@@ -12,7 +12,7 @@ trait ApiTestAssertionsTrait
 
     protected static function getErrorMessageEntityNotFound(): string
     {
-        return sprintf(static::ERROR_MESSAGE_ENTITY_NOT_FOUND, 'entity');
+        return \sprintf(static::ERROR_MESSAGE_ENTITY_NOT_FOUND, 'entity');
     }
 
     protected static function getErrorMessageJwtNotFound(): string
@@ -35,9 +35,6 @@ trait ApiTestAssertionsTrait
 
     /**
      * Determine if two arrays are similar.
-     *
-     * @param array $a
-     * @param array $b
      */
     protected static function assertArraysAreSimilar(array $a, array $b): void
     {
@@ -52,14 +49,11 @@ trait ApiTestAssertionsTrait
      *
      * Both arrays must have the same indexes with identical values
      * without respect to key ordering
-     *
-     * @param array $a
-     * @param array $b
      */
     protected static function assertAssociativeArraysAreSimilar(array $a, array $b): void
     {
         // Indexes must match
-        static::assertCount(count($a), $b, 'The array have not the same size');
+        static::assertCount(\count($a), $b, 'The array have not the same size');
 
         // Compare values
         foreach ($a as $k => $v) {
@@ -70,10 +64,6 @@ trait ApiTestAssertionsTrait
 
     /**
      * Asserts an API problem standard error.
-     *
-     * @param int       $expectedStatus
-     * @param array     $messages
-     * @param ApiOutput $apiOutput
      */
     protected static function assertApiProblemError(ApiOutput $apiOutput, int $expectedStatus, array $messages): void
     {
@@ -116,7 +106,7 @@ trait ApiTestAssertionsTrait
     {
         static::assertEquals($expectedStatus, $apiOutput->getStatusCode());
         $data = $apiOutput->getData();
-        static::assertCount($count, $data, "Expected list size : {$count}, get ".count($data));
+        static::assertCount($count, $data, "Expected list size : {$count}, get ".\count($data));
         if (null !== $total) {
             static::assertEquals($total, $apiOutput->getHeaderLine('X-Total-Results'));
         }
@@ -135,7 +125,7 @@ trait ApiTestAssertionsTrait
     {
         if (!$assertOnlyFields) {
             static::assertNotNull($entity, 'The entity should not be null !');
-            static::assertCount(count($fields), $entity, 'Expected field count : '.count($fields).', get '.count($entity));
+            static::assertCount(\count($fields), $entity, 'Expected field count : '.\count($fields).', get '.\count($entity));
         }
         foreach ($fields as $field) {
             static::assertArrayHasKey($field, $entity, "Entity must have this field : {$field}");
@@ -143,17 +133,14 @@ trait ApiTestAssertionsTrait
     }
 
     /**
-     * Asserts that array $expected is the same as $result using assertions methods in expected result
-     *
-     * @param array $expected
-     * @param array $result
+     * Asserts that array $expected is the same as $result using assertions methods in expected result.
      */
     protected static function assertAssessableContent(array &$expected, array &$result): void
     {
         $assessableFunctions = array_merge(static::assessableFunctions, static::$additionalAssessableFunctions);
         foreach ($expected as $key => $value) {
-            if (array_key_exists($key, $result)) {
-                if (!is_array($value)) {
+            if (\array_key_exists($key, $result)) {
+                if (!\is_array($value)) {
                     if (preg_match('/^\\\\|^{/', $value)) {
                         foreach ($assessableFunctions as $functionName) {
                             $functionExpr1 = "\\\\{$functionName}\((.*)\)";
@@ -166,7 +153,7 @@ trait ApiTestAssertionsTrait
                             }
                         }
                     }
-                } elseif (is_array($result[$key])) {
+                } elseif (\is_array($result[$key])) {
                     static::assertAssessableContent($expected[$key], $result[$key]);
                 }
             }
@@ -181,8 +168,8 @@ trait ApiTestAssertionsTrait
     private static function getAssessableFunctionParameter(string $param)
     {
         // value in quotes
-        if ('\'' === substr($param, 0, 1) && '\'' === substr($param, strlen($param) - 1, 1)) {
-            return substr($param, 1, strlen($param) - 2);
+        if ('\'' === mb_substr($param, 0, 1) && '\'' === mb_substr($param, mb_strlen($param) - 1, 1)) {
+            return mb_substr($param, 1, mb_strlen($param) - 2);
         }
 
         return $param;
@@ -191,10 +178,6 @@ trait ApiTestAssertionsTrait
     /**
      * Test if the value is DateTime
      * usage : assertDateTime([format for ex 'y-m-d']).
-     *
-     * @param $key
-     * @param $format
-     * @param $value
      */
     protected static function assertDateTime($key, $format, $value): void
     {
@@ -208,10 +191,7 @@ trait ApiTestAssertionsTrait
 
     /**
      * Test if the value is DateTime and value is now with 1 second range
-     * usage : assertDateTimeNow([format for ex 'y-m-d'])
-     * @param string $key
-     * @param string|null $format
-     * @param string|null $value
+     * usage : assertDateTimeNow([format for ex 'y-m-d']).
      */
     protected static function assertDateTimeNow(string $key, ?string $format, ?string $value)
     {
@@ -226,10 +206,6 @@ trait ApiTestAssertionsTrait
     /**
      * Test if the value is Date (format Y-m-d)
      * usage : assertDate().
-     *
-     * @param $key
-     * @param $expected
-     * @param $value
      */
     protected static function assertDate($key, $expected, $value): void
     {
@@ -240,10 +216,6 @@ trait ApiTestAssertionsTrait
      * Test if the value is file url
      * You can use {UID} & {UUID} tags
      * Usage : assertFileUrl(my_directory_{UUID}/file_{UID}.jpg).
-     *
-     * @param $key
-     * @param $expected
-     * @param $value
      */
     private static function assertFileUrl($key, $expected, $value): void
     {
@@ -262,10 +234,6 @@ trait ApiTestAssertionsTrait
      * Test if the value is filename with extension
      * You can use {UID} & {UUID} tags
      * Usage : assertFileUrl(my_file_{UID}.jpg).
-     *
-     * @param $key
-     * @param $expected
-     * @param $value
      */
     private static function assertFileName($key, $expected, $value): void
     {
@@ -281,10 +249,6 @@ trait ApiTestAssertionsTrait
     /**
      * Test if the value is UUID
      * Usage : assertUUID().
-     *
-     * @param $key
-     * @param $expected
-     * @param $value
      */
     private static function assertUUID($key, $expected, $value): void
     {

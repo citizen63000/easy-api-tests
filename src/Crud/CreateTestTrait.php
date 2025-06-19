@@ -32,10 +32,9 @@ trait CreateTestTrait
     {
         $requiredFields = static::getRequiredFields();
 
-        if(count($requiredFields) > 0) {
+        if (\count($requiredFields) > 0) {
             foreach ($requiredFields as $key => $value) {
-
-                if(is_int($key)) {
+                if (\is_int($key)) {
                     $requiredField = $value;
                     $errorMessage = static::$errorPrefix.static::getDataClassShortName().".{$requiredField}.required";
                 } else {

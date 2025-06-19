@@ -6,7 +6,7 @@ use Namshi\JOSE\JWS;
 
 trait AuthenticationTestFunctionsTrait
 {
-    use crudFunctionsTestTrait;
+    use CrudFunctionsTestTrait;
 
     protected function checkAuthenticateResponse(array $response): void
     {
@@ -19,6 +19,6 @@ trait AuthenticationTestFunctionsTrait
     {
         self::assertArrayHasKey('iat', $payload);
         self::assertArrayHasKey('exp', $payload);
-        self::assertEquals($payload['iat'] + self::$container->getParameter('jwt_token_ttl'), $payload['exp']);
+        self::assertEquals($payload['iat'] + static::getContainer()->getParameter('jwt_token_ttl'), $payload['exp']);
     }
 }

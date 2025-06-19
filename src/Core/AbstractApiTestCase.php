@@ -131,6 +131,7 @@ abstract class AbstractApiTestCase extends WebTestCase
 
     /**
      * Check if engine is initialized.
+     *
      * @throws \Exception
      */
     final protected static function isInitialized(): bool
@@ -139,7 +140,7 @@ abstract class AbstractApiTestCase extends WebTestCase
             null !== self::$client
             && null !== static::getEntityManager()
             && null !== self::$router
-            ;
+        ;
     }
 
     /**
@@ -159,7 +160,7 @@ abstract class AbstractApiTestCase extends WebTestCase
 
         global $argv;
 
-        static::$debug = static::getContainer()->getParameter('easy_api_tests.debug') || in_array('--debug', $argv, true);
+        static::$debug = static::getContainer()->getParameter('easy_api_tests.debug') || \in_array('--debug', $argv, true);
         static::$assertTrueInsteadOfMarkSkipped = static::getContainer()->getParameter('easy_api_tests.skipped_as_true');
         static::$errorPrefix = static::getContainer()->getParameter('easy_api_tests.error_prefix');
     }
@@ -201,7 +202,7 @@ abstract class AbstractApiTestCase extends WebTestCase
                 STDOUT,
                 ($debugNewLine ? "\n" : '')
                 ."\e[33m🐞"
-                .((self::DEBUG_LEVEL_ADVANCED === static::$debugLevel) ? ' ['.str_pad(++self::$debugTop, 3, '0', STR_PAD_LEFT).']' : '')
+                .((self::DEBUG_LEVEL_ADVANCED === static::$debugLevel) ? ' ['.mb_str_pad(++self::$debugTop, 3, '0', STR_PAD_LEFT).']' : '')
                 ."\e[0m"
                 ."{$message}\n"
             );
@@ -248,7 +249,7 @@ abstract class AbstractApiTestCase extends WebTestCase
      * @throws Exception
      * @throws \Doctrine\DBAL\Exception|\Exception
      */
-    protected static function getLastEntityId(string $className = null): int
+    protected static function getLastEntityId(?string $className = null): int
     {
         $tableName = static::getEntityManager()->getClassMetadata($className ?? static::entityClass)->getTableName();
         $schemaName = static::getEntityManager()->getClassMetadata($className ?? static::entityClass)->getSchemaName();
@@ -260,7 +261,7 @@ abstract class AbstractApiTestCase extends WebTestCase
     /**
      * @throws Exception|\Doctrine\DBAL\Exception
      */
-    protected static function getNextEntityId(string $className = null): ?int
+    protected static function getNextEntityId(?string $className = null): ?int
     {
         return ($id = self::getLastEntityId($className)) ? ++$id : null;
     }
@@ -269,9 +270,6 @@ abstract class AbstractApiTestCase extends WebTestCase
 
     // region User management
 
-    /**
-     * {@inheritdoc}
-     */
     public static function setUpBeforeClass(): void
     {
         self::logStep();
@@ -301,7 +299,6 @@ abstract class AbstractApiTestCase extends WebTestCase
     }
 
     /**
-     * {@inheritdoc}
      * @throws OptimisticLockException
      * @throws \Exception
      */
@@ -325,9 +322,6 @@ abstract class AbstractApiTestCase extends WebTestCase
         static::$launchFirstSetup = true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function tearDownAfterClass(): void
     {
         self::logStep();
@@ -337,6 +331,7 @@ abstract class AbstractApiTestCase extends WebTestCase
 
     /**
      * Performs setup operations.
+     *
      * @throws \Exception
      */
     final protected static function doSetup(): void
@@ -352,7 +347,7 @@ abstract class AbstractApiTestCase extends WebTestCase
     /**
      * Define user & password for tests.
      */
-    protected static function defineUserPassword(string $user = null, string $password = null): void
+    protected static function defineUserPassword(?string $user = null, ?string $password = null): void
     {
         static::logStep();
         if (!self::$user || !$user && !$password) {
@@ -417,7 +412,7 @@ abstract class AbstractApiTestCase extends WebTestCase
 
     protected static function getKernel(): KernelInterface
     {
-        if (null == static::$kernel) {
+        if (null === static::$kernel) {
             static::$kernel = static::createKernel();
         }
 

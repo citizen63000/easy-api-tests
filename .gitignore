@@ -15,7 +15,6 @@
 ###< phpunit/phpunit ###
 
 # Only dev
-Dockerfile
-docker-compose.yml
-.docker/
 /.idea
+/composer.lock
+/.php-cs.cache

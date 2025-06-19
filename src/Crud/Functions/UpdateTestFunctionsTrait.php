@@ -7,13 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 trait UpdateTestFunctionsTrait
 {
-    use crudFunctionsTestTrait;
+    use CrudFunctionsTestTrait;
 
     /**
      * PUT - Nominal case.
+     *
      * @throws \Exception
      */
-    protected function doTestUpdate(?string $id, string $filename, array $params = [], string $userLogin = null, bool $doGetTest = true, int $expectedResponseCode = Response::HTTP_OK): void
+    protected function doTestUpdate(?string $id = null, ?string $filename = '', array $params = [], ?string $userLogin = null, bool $doGetTest = true, int $expectedResponseCode = Response::HTTP_OK): void
     {
         $id = $id ?? static::defaultEntityId;
         $params += [static::identifier => $id];
@@ -47,10 +48,11 @@ trait UpdateTestFunctionsTrait
     }
 
     /**
-     * Test Invalid submitted data case, fox example invalid data in a field with constraint
+     * Test Invalid submitted data case, fox example invalid data in a field with constraint.
+     *
      * @throws \Exception
      */
-    protected function doTestUpdateInvalid(?string $id, string $filename, array $params = [], array $expectedErrors, int $expectedStatusCode = Response::HTTP_UNPROCESSABLE_ENTITY, string $userLogin = null): void
+    protected function doTestUpdateInvalid(?string $id, string $filename, array $params, array $expectedErrors, int $expectedStatusCode = Response::HTTP_UNPROCESSABLE_ENTITY, ?string $userLogin = null): void
     {
         $id = $id ?? static::defaultEntityId;
         $params += [static::identifier => $id];
@@ -62,7 +64,7 @@ trait UpdateTestFunctionsTrait
     /**
      * GET - Error case - entity not found.
      */
-    public function doTestUpdateNotFound(string $id = null, array $params = [], string $userLogin = null): void
+    public function doTestUpdateNotFound(?string $id = null, array $params = [], ?string $userLogin = null): void
     {
         $params += [static::identifier => $id ?? static::defaultEntityNotFoundId];
         $apiOutput = self::httpPutWithLogin(['name' => static::getUpdateRouteName(), 'params' => $params], $userLogin, []);
@@ -72,7 +74,7 @@ trait UpdateTestFunctionsTrait
     /**
      * PUT - Error case - 401 - Without authentication.
      */
-    protected function doTestUpdateWithoutAuthentication(string $id = null, array $params = []): void
+    protected function doTestUpdateWithoutAuthentication(?string $id = null, array $params = []): void
     {
         $params += [static::identifier => $id ?? static::defaultEntityId];
         $apiOutput = self::httpPut(['name' => static::getUpdateRouteName(), 'params' => $params], [], false);
@@ -81,9 +83,10 @@ trait UpdateTestFunctionsTrait
 
     /**
      * PUT - Error case - 403 - Missing right.
+     *
      * @throws \Exception
      */
-    protected function doTestUpdateWithoutRight(string $id = null, array $params = [], string $userLogin = null): void
+    protected function doTestUpdateWithoutRight(?string $id = null, array $params = [], ?string $userLogin = null): void
     {
         $params += [static::identifier => $id ?? static::defaultEntityId];
 
@@ -98,13 +101,14 @@ trait UpdateTestFunctionsTrait
 
     /**
      * PUT - Error case - 403 - Forbidden action.
+     *
      * @throws \Exception
      */
-    protected function doTestUpdateForbiddenAction(string $id = null, string $filename = null, array $params = [], string $userLogin = null, $messages = [ApiProblem::FORBIDDEN], $errorCode = Response::HTTP_FORBIDDEN): void
+    protected function doTestUpdateForbiddenAction(?string $id = null, ?string $filename = null, array $params = [], ?string $userLogin = null, $messages = [ApiProblem::FORBIDDEN], $errorCode = Response::HTTP_FORBIDDEN): void
     {
         $params += [static::identifier => $id ?? static::defaultEntityId];
 
-        $data = null != $filename ? $this->getDataSent($filename, self::$updateActionType) : [];
+        $data = null !== $filename ? $this->getDataSent($filename, self::$updateActionType) : [];
 
         $apiOutput = self::httpPutWithLogin(['name' => static::getUpdateRouteName(), 'params' => $params], $userLogin, $data);
 

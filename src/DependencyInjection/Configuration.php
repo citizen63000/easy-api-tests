@@ -10,13 +10,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *
  * This information is solely responsible for how the different configuration
  * sections are normalized, and merged.
- *
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('easy_api_tests');
@@ -30,7 +26,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('datetime_format')->defaultValue(\DateTimeInterface::ATOM)->end()
                 ->end()
             ->end()
-            ;
+        ;
 
         return $treeBuilder;
     }

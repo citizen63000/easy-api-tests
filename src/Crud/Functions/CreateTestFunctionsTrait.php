@@ -2,23 +2,18 @@
 
 namespace EasyApiTests\Crud\Functions;
 
-use EasyApiCore\Util\ApiProblem;
 use Symfony\Component\HttpFoundation\Response;
 
 trait CreateTestFunctionsTrait
 {
-    use crudFunctionsTestTrait;
+    use CrudFunctionsTestTrait;
 
     /**
      * POST - Nominal case.
-     * @param string $filename
-     * @param array $params
-     * @param bool $testGetAfterCreate
-     * @param string|null $userLogin
-
+     *
      * @throws \Exception
      */
-    protected function doTestCreate(string $filename, array $params = [], bool $testGetAfterCreate = true, string $userLogin = null): void
+    protected function doTestCreate(string $filename, array $params = [], bool $testGetAfterCreate = true, ?string $userLogin = null): void
     {
         $data = $this->getDataSent($filename, self::$createActionType);
 
@@ -33,16 +28,17 @@ trait CreateTestFunctionsTrait
         static::assertEquals($expectedResult, $result, "Assert failed for file {$filename}");
 
         // Get after create
-        if($testGetAfterCreate) {
+        if ($testGetAfterCreate) {
             $this->doTestGetAfterSave($expectedResult['id'], $filename, $userLogin);
         }
     }
 
     /**
-     * Test Invalid submitted data case, fox example invalid data in a field with constraint
+     * Test Invalid submitted data case, fox example invalid data in a field with constraint.
+     *
      * @throws \Exception
      */
-    protected function doTestCreateInvalid(string $filename, array $params = [], array $expectedErrors, int $expectedStatusCode = Response::HTTP_UNPROCESSABLE_ENTITY, string $userLogin = null): void
+    protected function doTestCreateInvalid(string $filename, array $params, array $expectedErrors, int $expectedStatusCode = Response::HTTP_UNPROCESSABLE_ENTITY, ?string $userLogin = null): void
     {
         $data = $this->getDataSent($filename, self::$createActionType);
         $apiOutput = self::httpPostWithLogin(['name' => static::getCreateRouteName(), 'params' => $params], $userLogin, $data);
@@ -61,7 +57,7 @@ trait CreateTestFunctionsTrait
     /**
      * POST - Error case - 403 - Missing right.
      */
-    protected function doTestCreateWithoutRight(array $params = [], string $userLogin = null): void
+    protected function doTestCreateWithoutRight(array $params = [], ?string $userLogin = null): void
     {
         if (null === $userLogin) {
             $userLogin = static::USER_NORULES_TEST_USERNAME;
@@ -74,11 +70,12 @@ trait CreateTestFunctionsTrait
 
     /**
      * POST - Error case - 403 - Forbidden action.
+     *
      * @throws \Exception
      */
-    protected function doTestCreateForbiddenAction(string $filename = null, array $params = [], string $userLogin = null, array $messages = [], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void
+    protected function doTestCreateForbiddenAction(?string $filename = null, array $params = [], ?string $userLogin = null, array $messages = [], $errorCode = Response::HTTP_UNPROCESSABLE_ENTITY): void
     {
-        $data = null != $filename ? $this->getDataSent($filename, self::$createActionType) : [];
+        $data = null !== $filename ? $this->getDataSent($filename, self::$createActionType) : [];
 
         $messages = empty($messages) ? [static::getErrorMessageRestrictedAccess()] : $messages;
 

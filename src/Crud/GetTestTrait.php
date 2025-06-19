@@ -8,7 +8,7 @@ use EasyApiTests\Crud\Functions\GetTestFunctionsTrait;
  * testGet()
  * testGetNotFound()
  * testGetWithoutAuthentication()
- * testGetWithoutRight()
+ * testGetWithoutRight().
  */
 trait GetTestTrait
 {

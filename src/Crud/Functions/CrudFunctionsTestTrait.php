@@ -5,7 +5,7 @@ namespace EasyApiTests\Crud\Functions;
 use EasyApiCore\Util\Forms\FormSerializer;
 use Symfony\Component\HttpFoundation\Response;
 
-trait crudFunctionsTestTrait
+trait CrudFunctionsTestTrait
 {
     protected static string $getActionType = 'Get';
     protected static string $getListActionType = 'GetList';
@@ -18,9 +18,11 @@ trait crudFunctionsTestTrait
     {
         try {
             $rc = new \ReflectionClass($this);
+
             return str_replace("/{$rc->getShortName()}.php", '', $rc->getFilename());
         } catch (\Exception $e) {
             echo $e->getMessage();
+
             return null;
         }
     }
@@ -38,10 +40,10 @@ trait crudFunctionsTestTrait
             // created_at / updated_at fields
             if ($dateProtection) {
                 if (self::$createActionType === $type || self::$updateActionType === $type || self::$cloneActionType === $type) {
-                    if (array_key_exists('createdAt', $result)) {
+                    if (\array_key_exists('createdAt', $result)) {
                         $result['createdAt'] = '\assertDateTime()';
                     }
-                    if (array_key_exists('updatedAt', $result)) {
+                    if (\array_key_exists('updatedAt', $result)) {
                         $result['updatedAt'] = '\assertDateTime()';
                     }
                 }
@@ -59,7 +61,6 @@ trait crudFunctionsTestTrait
         $filePath = "{$dir}/{$filename}";
 
         if (!file_exists($filePath)) {
-
             if (!is_dir($dir)) {
                 mkdir($dir, 0777, true);
             }
@@ -72,9 +73,10 @@ trait crudFunctionsTestTrait
 
     /**
      * Retrieve data from file $filename or create it.
+     *
      * @throws \Exception
      */
-    protected function getDataSent(string $filename, string $type, array $defaultContent = null): array
+    protected function getDataSent(string $filename, string $type, ?array $defaultContent = null): array
     {
         $dir = "{$this->getCurrentDir()}/DataSent/$type";
         $filePath = "$dir/$filename";
@@ -100,7 +102,7 @@ trait crudFunctionsTestTrait
 
     protected static function generateJson($content): array|bool|string
     {
-        $json = json_encode($content, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+        $json = json_encode($content, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 
         return str_replace('{}', '[]', $json);
     }
@@ -119,13 +121,12 @@ trait crudFunctionsTestTrait
 
         $fields = [];
         foreach ($normalizedForm->getFields() as $field) {
-
             $defaultValue = '';
             switch ($field->getType()) {
                 case 'string':
-                    if('date' === $field->getFormat()) {
+                    if ('date' === $field->getFormat()) {
                         $defaultValue = (new \DateTime())->format('Y-m-d');
-                    } elseif('date-time' === $field->getFormat()) {
+                    } elseif ('date-time' === $field->getFormat()) {
                         $defaultValue = (new \DateTime())->format('Y-m-d h:i:s');
                     } else {
                         $defaultValue = 'string';
@@ -145,17 +146,17 @@ trait crudFunctionsTestTrait
                     break;
                 case 'boolean':
                 case 'entity':
-                    $nbValues = count($field->getValues());
+                    $nbValues = \count($field->getValues());
                     if ('array' === $field->getFormat()) {
                         if ($nbValues >= 2 && isset($field->getValues()[0][static::identifier]) && isset($field->getValues()[1][static::identifier])) {
                             $defaultValue = [$field->getValues()[0][static::identifier], $field->getValues()[1][static::identifier]];
-                        } elseif ($nbValues == 1 && isset($field->getValues()[0][static::identifier])) {
+                        } elseif (1 === $nbValues && isset($field->getValues()[0][static::identifier])) {
                             $defaultValue = [$field->getValues()[0][static::identifier]];
                         } else {
                             $defaultValue = ['1'];
                         }
                     } else {
-                        if ($nbValues == '1') {
+                        if ('1' === $nbValues) {
                             $defaultValue = [$field->getValues()[0][static::identifier]];
                         } else {
                             $defaultValue = '1';
@@ -171,7 +172,6 @@ trait crudFunctionsTestTrait
 
     /**
      * @param string $type self::$createActionType | self::$updateActionType
-     * @return string|null
      */
     protected static function getFormClassOfRoute(string $type): ?string
     {
@@ -181,12 +181,12 @@ trait crudFunctionsTestTrait
             $route = static::$router->getRouteCollection()->get(self::getCreateRouteName());
             $controllerAction = $route->getDefault('_controller');
             $controllerClassName = explode('::', $controllerAction)[0];
-            $formClass = constant("{$controllerClassName}::entityCreateTypeClass");
+            $formClass = \constant("{$controllerClassName}::entityCreateTypeClass");
         } else {
             $route = static::$router->getRouteCollection()->get(self::getUpdateRouteName());
             $controllerAction = $route->getDefault('_controller');
             $controllerClassName = explode('::', $controllerAction)[0];
-            $formClass = constant("{$controllerClassName}::entityUpdateTypeClass");
+            $formClass = \constant("{$controllerClassName}::entityUpdateTypeClass");
         }
 
         return $formClass;
@@ -249,10 +249,10 @@ trait crudFunctionsTestTrait
 
     protected static function getDataClassShortName(): string
     {
-        return lcfirst(substr(static::entityClass, strrpos(static::entityClass, '\\') + 1));
+        return lcfirst(mb_substr(static::entityClass, mb_strrpos(static::entityClass, '\\') + 1));
     }
 
-    protected function doTestGetAfterSave(string $id, string $filename, string $userLogin = null): void
+    protected function doTestGetAfterSave(string $id, string $filename, ?string $userLogin = null): void
     {
         $apiOutput = self::httpGetWithLogin(['name' => static::getGetRouteName(), 'params' => [static::identifier => $id]], $userLogin);
         static::assertEquals(Response::HTTP_OK, $apiOutput->getStatusCode());

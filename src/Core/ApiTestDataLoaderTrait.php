@@ -96,7 +96,7 @@ trait ApiTestDataLoaderTrait
         $cachedQuery = self::getCachedData('test.data.reset.not_empty_tables_query');
 
         if (!$cachedQuery->isHit() || !static::$useCache) {
-            if (count(static::$schemas) > 0) {
+            if (\count(static::$schemas) > 0) {
                 $arraySchemas = [];
                 foreach (static::$schemas as $schema) {
                     $arraySchemas[] = "'{$schema}'";
@@ -111,7 +111,7 @@ trait ApiTestDataLoaderTrait
                     AND TABLE_NAME NOT LIKE 'ref\_%'
                     ";
 
-            if (count(static::$excludedTablesToClean)) {
+            if (\count(static::$excludedTablesToClean)) {
                 foreach (static::$excludedTablesToClean as $key => $tableName) {
                     static::$excludedTablesToClean[$key] = "'{$tableName}'";
                 }
@@ -119,7 +119,7 @@ trait ApiTestDataLoaderTrait
                 $sql .= " AND CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) NOT IN ({$sqlNotToClean})";
             }
 
-            if (count(static::$referentialsToClean)) {
+            if (\count(static::$referentialsToClean)) {
                 $arrayRefs = [];
                 foreach (static::$referentialsToClean as $table) {
                     $arrayRefs[] = "'{$table}'";
@@ -171,12 +171,6 @@ trait ApiTestDataLoaderTrait
         }
     }
 
-    /**
-     * @param string $table
-     * @param string $filename
-     *
-     * @return mixed
-     */
     protected static function generateLoadDataQuery(string $table, string $filename)
     {
         $filePath = self::getDataCsvFilePath($filename);
@@ -216,7 +210,7 @@ trait ApiTestDataLoaderTrait
      * @throws OptimisticLockException
      * @throws ORMException
      */
-    final protected static function executeSQLQuery(string $query, bool $debugNewLine = false, bool $showQuery = false, string $managerName = null): void
+    final protected static function executeSQLQuery(string $query, bool $debugNewLine = false, bool $showQuery = false, ?string $managerName = null): void
     {
         $em = static::getEntityManager($managerName);
 
@@ -252,7 +246,6 @@ trait ApiTestDataLoaderTrait
     }
 
     /**
-     * @param string $filename
      * @return false|string
      */
     protected static function getSqlFileContent(string $filename)
@@ -270,10 +263,6 @@ trait ApiTestDataLoaderTrait
         );
     }
 
-    /**
-     * @param string $filename
-     * @return string
-     */
     protected static function getDataCsvFileColumns(string $filename): string
     {
         $path = self::$projectDir.DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'csv'.DIRECTORY_SEPARATOR.$filename;
@@ -285,8 +274,6 @@ trait ApiTestDataLoaderTrait
     }
 
     /**
-     * @param string $filename
-     *
      * @return bool|string
      */
     protected static function getDataYmlFileContent(string $filename)
@@ -297,9 +284,6 @@ trait ApiTestDataLoaderTrait
     /**
      * Parse yml date file.
      *
-     * @param string $filename
-     *
-     * @return array
      * @throws InvalidArgumentException
      */
     protected static function parseDataYmlFile(string $filename): array
@@ -322,11 +306,6 @@ trait ApiTestDataLoaderTrait
         return $cachedContent->get();
     }
 
-    /**
-     * @param string $fileName
-     *
-     * @return string
-     */
     protected static function getDataCsvFilePath(string $fileName): string
     {
         return self::$csvDataFilesPath.$fileName;
