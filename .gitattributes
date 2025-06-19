@@ -5,7 +5,7 @@
 .gitignore export-ignore
 .php-cs export-ignore
 .phpunit.result.cache export-ignore
-docker-compose.json export-ignore
+docker-compose.yml export-ignore
 Dockerfile export-ignore
 phpunit.xml* export-ignore
 README.md export-ignore
