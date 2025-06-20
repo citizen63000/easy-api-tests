@@ -113,7 +113,9 @@ trait ApiTestDataLoaderTrait
 
             if (\count(static::$excludedTablesToClean)) {
                 foreach (static::$excludedTablesToClean as $key => $tableName) {
-                    static::$excludedTablesToClean[$key] = "'{$tableName}'";
+                    static::$excludedTablesToClean[$key] = (str_starts_with($tableName, "'") && str_ends_with($tableName, "'"))
+                        ? $tableName
+                        : "'$tableName'";
                 }
                 $sqlNotToClean = implode(',', static::$excludedTablesToClean);
                 $sql .= " AND CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) NOT IN ({$sqlNotToClean})";
