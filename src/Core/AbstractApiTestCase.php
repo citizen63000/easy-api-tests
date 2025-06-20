@@ -164,6 +164,7 @@ abstract class AbstractApiTestCase extends WebTestCase
         static::$debug = static::getContainer()->getParameter('easy_api_tests.debug') || \in_array('--debug', $argv, true);
         static::$assertTrueInsteadOfMarkSkipped = static::getContainer()->getParameter('easy_api_tests.skipped_as_true');
         static::$errorPrefix = static::getContainer()->getParameter('easy_api_tests.error_prefix');
+        static::$useCache = static::getContainer()->getParameter('easy_api_tests.use_cache');
     }
 
     protected static function rebootClient(): void
