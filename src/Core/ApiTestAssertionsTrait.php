@@ -226,7 +226,7 @@ trait ApiTestAssertionsTrait
         $expected = str_replace('{UID}', '[a-zA-Z0-9]+', $expected);
         $expected = "/$expected/";
         $errorMessage = "Invalid file url in {$key} field: expected {$expected}, get value {$value}.";
-        static::assertMatchesRegularExpression("/$expected/", $value, $errorMessage);
+        static::assertMatchesRegularExpression($expected, $value, $errorMessage);
     }
 
     /**
@@ -241,7 +241,7 @@ trait ApiTestAssertionsTrait
         $expected = str_replace('{UID}', static::regexp_uid, $expected);
         $expected = "/$expected/";
         $errorMessage = "Invalid file name in {$key} field: expected {$expected}, get value {$value}.";
-        static::assertMatchesRegularExpression("/$expected/", $value, $errorMessage);
+        static::assertMatchesRegularExpression($expected, $value, $errorMessage);
     }
 
     /**
