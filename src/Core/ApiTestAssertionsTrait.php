@@ -226,8 +226,7 @@ trait ApiTestAssertionsTrait
         $expected = str_replace('{UID}', '[a-zA-Z0-9]+', $expected);
         $expected = "/$expected/";
         $errorMessage = "Invalid file url in {$key} field: expected {$expected}, get value {$value}.";
-        $found = preg_match($expected, $value);
-        static::assertTrue((bool) $found, $errorMessage);
+        static::assertMatchesRegularExpression("/$expected/", $value, $errorMessage);
     }
 
     /**
@@ -242,8 +241,7 @@ trait ApiTestAssertionsTrait
         $expected = str_replace('{UID}', static::regexp_uid, $expected);
         $expected = "/$expected/";
         $errorMessage = "Invalid file name in {$key} field: expected {$expected}, get value {$value}.";
-        $found = preg_match($expected, $value);
-        static::assertTrue((bool) $found, $errorMessage);
+        static::assertMatchesRegularExpression("/$expected/", $value, $errorMessage);
     }
 
     /**
@@ -254,6 +252,15 @@ trait ApiTestAssertionsTrait
     {
         $expected = static::regexp_uuid;
         $errorMessage = "Invalid UUID in {$key} field: expected {$expected}, get value {$value}";
-        static::assertTrue((bool) preg_match("/$expected/", $value), $errorMessage);
+        static::assertMatchesRegularExpression("/$expected/", $value, $errorMessage);
+    }
+
+    /**
+     * Test if the value has regex
+     * usage : assertRegex([regex for ex 'toto[0-9]{3}']).
+     */
+    protected static function assertRegex($key, $regex, $value): void
+    {
+        static::assertMatchesRegularExpression($regex, $value, "{$key} field does not match regex {$regex}, get value '{$value}'");
     }
 }

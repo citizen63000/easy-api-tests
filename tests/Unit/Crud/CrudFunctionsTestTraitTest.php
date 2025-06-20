@@ -118,7 +118,13 @@ class CrudFunctionsTestTraitTest extends TestCase
 
     public function testActionTypeConstants(): void
     {
-        $reflection = new \ReflectionClass(CrudFunctionsTestTrait::class);
+        $reflection = new \ReflectionClass(
+            \get_class(
+                new class extends TestCase {
+                    use CrudFunctionsTestTrait;
+                }
+            )
+        );
 
         $this->assertSame('Get', $reflection->getStaticPropertyValue('getActionType'));
         $this->assertSame('GetList', $reflection->getStaticPropertyValue('getListActionType'));
