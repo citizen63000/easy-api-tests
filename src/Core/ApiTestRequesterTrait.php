@@ -280,7 +280,7 @@ trait ApiTestRequesterTrait
     /**
      * @throws \Exception
      */
-    public static function httpPutWithLogin(array|string $route, ?string $userLogin = null, $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
+    public static function httpPutWithLogin(array|string $route, ?string $userLogin = null, mixed $content = [], array $extraHttpHeaders = [], string $formatIn = Format::JSON, string $formatOut = Format::JSON): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
         $token = static::getToken($userLogin);
@@ -296,20 +296,20 @@ trait ApiTestRequesterTrait
      *
      * @throws \Exception
      */
-    public static function httpDelete(array|string $route, bool $withToken = true, array $extraHttpHeaders = []): ApiOutput
+    public static function httpDelete(array|string $route, bool $withToken = true, array $extraHttpHeaders = [], mixed $content = null): ApiOutput
     {
-        return self::executeRequest('DELETE', $route, null, $withToken, Format::JSON, Format::JSON, $extraHttpHeaders);
+        return self::executeRequest('DELETE', $route, $content, $withToken, Format::JSON, Format::JSON, $extraHttpHeaders);
     }
 
     /**
      * @throws \Exception
      */
-    public static function httpDeleteWithLogin(array|string $route, ?string $userLogin = null, array $extraHttpHeaders = []): ApiOutput
+    public static function httpDeleteWithLogin(array|string $route, ?string $userLogin = null, array $extraHttpHeaders = [], mixed $content = null): ApiOutput
     {
         $userLogin = $userLogin ?? static::$user;
         $token = static::getToken($userLogin);
 
-        return static::httpDelete($route, false, $extraHttpHeaders + ['Authorization' => static::getAuthorizationStringFromToken($token)]);
+        return static::httpDelete($route, false, $extraHttpHeaders + ['Authorization' => static::getAuthorizationStringFromToken($token)], $content);
     }
 
     /**
