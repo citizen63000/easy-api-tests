@@ -5,7 +5,7 @@ namespace EasyApiTests\Core;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
 
-trait APITestCacheManagementTrait
+trait ApiTestCacheManagementTrait
 {
     protected static bool $useCache = true;
     protected static ?CacheInterface $cache = null;

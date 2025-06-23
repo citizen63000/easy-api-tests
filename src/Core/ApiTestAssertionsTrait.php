@@ -118,14 +118,29 @@ trait ApiTestAssertionsTrait
     /**
      * Asserts that entity contains exactly these fields.
      *
-     * @param array $fields Expected fields
-     * @param array $entity JSON entity as array
+     * @param array      $fields Expected fields
+     * @param array|null $entity JSON entity as array
      */
-    protected static function assertFields(array $fields, array $entity, bool $assertOnlyFields = false): void
+    protected static function assertFields(array $fields, ?array $entity = null, bool $assertOnlyFields = false, bool $atLeast = false): void
     {
         if (!$assertOnlyFields) {
             static::assertNotNull($entity, 'The entity should not be null !');
-            static::assertCount(\count($fields), $entity, 'Expected field count : '.\count($fields).', get '.\count($entity));
+            if (!$atLeast) {
+                sort($fields);
+                ksort($entity);
+                static::assertCount(
+                    \count($fields),
+                    $entity,
+                    \sprintf(
+                        "Expected field count : %d, get %d\nFields expected: %s\nFields received: %s\nDiff: %s",
+                        \count($fields),
+                        \count($entity),
+                        implode(', ', $fields),
+                        implode(', ', array_keys($entity)),
+                        implode(', ', array_merge(array_diff($fields, array_intersect($fields, array_keys($entity))), array_diff(array_keys($entity), array_intersect($fields, array_keys($entity)))))
+                    )
+                );
+            }
         }
         foreach ($fields as $field) {
             static::assertArrayHasKey($field, $entity, "Entity must have this field : {$field}");
@@ -262,5 +277,83 @@ trait ApiTestAssertionsTrait
     protected static function assertRegex($key, $regex, $value): void
     {
         static::assertMatchesRegularExpression($regex, $value, "{$key} field does not match regex {$regex}, get value '{$value}'");
+    }
+
+    /**
+     * Checks that $actual contains at least all fields from $expected with the same values recursively.
+     *
+     * @param array  $expected Expected data (subset)
+     * @param array  $actual   Data to check
+     * @param string $path     Current path for error messages (used internally for recursion)
+     * @param string $message  Error message
+     */
+    protected static function assertArrayContainsSubset(array $expected, array $actual, string $path = '', string $message = ''): void
+    {
+        foreach ($expected as $key => $expectedValue) {
+            $currentPath = $path ? "$path.$key" : $key;
+
+            static::assertArrayHasKey(
+                $key,
+                $actual,
+                $message ?: "The key '$currentPath' does not exist in the current array"
+            );
+
+            if (\is_array($expectedValue)) {
+                static::assertIsArray(
+                    $actual[$key],
+                    $message ?: "The value at '$currentPath' should be an array"
+                );
+
+                static::assertArrayContainsSubset(
+                    $expectedValue,
+                    $actual[$key],
+                    $currentPath,
+                    $message
+                );
+            } elseif (\is_object($expectedValue) && \is_object($actual[$key])) {
+                // Generic object handling - compare accessible properties
+                static::assertEquals(
+                    (array) $expectedValue,
+                    (array) $actual[$key],
+                    $message ?: "The object at '$currentPath' does not match"
+                );
+            } else {
+                // Simple value check for scalar types
+                static::assertEquals(
+                    $expectedValue,
+                    $actual[$key],
+                    $message ?: "The value at '$currentPath' does not match. Expected: ".
+                        self::exportValue($expectedValue).', Got: '.self::exportValue($actual[$key])
+                );
+            }
+        }
+    }
+
+    /**
+     * Converts a value to a readable string for error messages.
+     */
+    private static function exportValue(mixed $value): string
+    {
+        if (\is_scalar($value) || null === $value) {
+            return var_export($value, true);
+        }
+
+        if (\is_array($value)) {
+            return 'array('.\count($value).')';
+        }
+
+        if (\is_object($value)) {
+            return \get_class($value);
+        }
+
+        return \gettype($value);
+    }
+
+    /**
+     * Public method to be used in tests.
+     */
+    public static function assertContainsSubset(array $expected, array $actual, string $message = ''): void
+    {
+        static::assertArrayContainsSubset($expected, $actual, '', $message);
     }
 }

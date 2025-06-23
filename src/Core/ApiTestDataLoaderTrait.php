@@ -15,7 +15,7 @@ use Symfony\Component\Yaml\Parser as YmlParser;
  */
 trait ApiTestDataLoaderTrait
 {
-    use APITestCacheManagementTrait;
+    use ApiTestCacheManagementTrait;
 
     protected static ?string $csvDataFilesPath;
     protected static array $schemas = [];
