@@ -259,6 +259,10 @@ trait CrudFunctionsTestTrait
         $result = $apiOutput->getData();
         $expectedResult = $this->getExpectedResponse($filename, static::$createActionType, $result, true);
         static::assertAssessableContent($expectedResult, $result);
-        static::assertEquals($expectedResult, $result, "Get after saving failed for file {$filename}");
+        if (static::strictComparison) {
+            static::assertEquals($expectedResult, $result, "Get after saving failed for file {$filename}");
+        } else {
+            static::assertContainsSubset($expectedResult, $result, "Get after saving failed for file {$filename}");
+        }
     }
 }

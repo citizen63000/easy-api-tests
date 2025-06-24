@@ -51,6 +51,8 @@ abstract class AbstractApiTestCase extends WebTestCase
     public const string regexp_uuid = '[a-zA-Z0-9]+\-[a-zA-Z0-9]+\-[a-zA-Z0-9]+\-[a-zA-Z0-9]+\-[a-zA-Z0-9]+';
     public const string regexp_uid = '[a-zA-Z0-9]+';
 
+    public const bool strictComparison = true;
+
     /** @var string[] */
     protected const array assessableFunctions = [
         'assertDateTime',

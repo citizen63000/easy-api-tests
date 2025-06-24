@@ -25,7 +25,11 @@ trait GetTestFunctionsTrait
         $expectedResult = $this->getExpectedResponse($filename, static::$getActionType, $result);
 
         static::assertAssessableContent($expectedResult, $result);
-        static::assertEquals($expectedResult, $result, "Assert failed for file {$filename}");
+        if (static::strictComparison) {
+            static::assertEquals($expectedResult, $result, "Assert failed for file {$filename}");
+        } else {
+            static::assertContainsSubset($expectedResult, $result, "Assert failed for file {$filename}");
+        }
     }
 
     /**

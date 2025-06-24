@@ -19,16 +19,23 @@ trait DescribeFormTestFunctionsTrait
 
     protected function doGetTest(string $method, array $params = [], ?string $userLogin = null, ?string $filename = null)
     {
+        if (!$filename) {
+            $filename = mb_strtolower($method).'.json';
+        }
         $params['method'] = $method;
         $apiOutput = self::httpGetWithLogin(['name' => static::getDescribeFormRouteName(), 'params' => $params], $userLogin);
 
         $result = $apiOutput->getData();
 
-        $expectedResult = $this->getExpectedResponse($filename ?? mb_strtolower($method).'.json', 'DescribeForm', $result);
+        $expectedResult = $this->getExpectedResponse($filename, 'DescribeForm', $result);
 
         self::assertEquals(Response::HTTP_OK, $apiOutput->getStatusCode());
         static::assertAssessableContent($expectedResult, $result);
-        self::assertEquals($expectedResult, $result);
+        if (static::strictComparison) {
+            static::assertEquals($expectedResult, $result, "Get for DescribeForm failed for file {$filename}");
+        } else {
+            static::assertContainsSubset($expectedResult, $result, "Get for DescribeForm failed for file {$filename}");
+        }
     }
 
     /**
