@@ -3,8 +3,8 @@
 namespace EasyApiTests\Core;
 
 use Doctrine\DBAL\Exception;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Yaml\Parser as YmlParser;
 
@@ -222,13 +222,13 @@ trait ApiTestDataLoaderTrait
 
         try {
             $start = microtime(true);
-            $result = $em->getConnection()->exec($query);
+            $result = $em->getConnection()->executeStatement($query);
             $seconds = microtime(true) - $start;
 
             // errors
             if (static::$debug) {
                 self::logDebug("\t\t🎌 \e[32m{$result}\e[0m affected rows in {$seconds} seconds", self::DEBUG_LEVEL_ADVANCED, $debugNewLine);
-                $warnings = $em->getConnection()->executeQuery('SHOW WARNINGS')->fetchAll(\PDO::FETCH_ASSOC);
+                $warnings = $em->getConnection()->executeQuery('SHOW WARNINGS')->fetchAllAssociative();
                 foreach ($warnings as $warning) {
                     self::logError("\t\t🎌\t SQl Error: level: {$warning['Level']}, code: {$warning['Code']}, message: {$warning['Message']}, Query: {$query}");
                 }
