@@ -5,7 +5,7 @@ namespace EasyApiTests\Core;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -68,7 +68,7 @@ trait TestUtilsTrait
     /**
      * @throws \Exception
      */
-    protected static function getCache(): AdapterInterface
+    protected static function getCache(): CacheItemPoolInterface
     {
         return static::getContainer()->get('cache.app');
     }

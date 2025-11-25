@@ -91,11 +91,6 @@ class UpdateTestFunctionsTraitTest extends TestCase
         return ['id' => 123, 'name' => 'updated entity'];
     }
 
-    public static function assertEquals($expected, $actual, string $message = ''): void
-    {
-        parent::assertEquals($expected, $actual, $message);
-    }
-
     public static function assertAssessableContent(array $expected, array $actual): void
     {
         static::assertSame($expected, $actual);

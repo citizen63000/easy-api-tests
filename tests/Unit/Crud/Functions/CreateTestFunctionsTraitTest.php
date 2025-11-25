@@ -93,14 +93,6 @@ class CreateTestFunctionsTraitTest extends TestCase
     /**
      * Mock method for testing.
      */
-    public static function assertEquals($expected, $actual, string $message = ''): void
-    {
-        parent::assertEquals($expected, $actual, $message);
-    }
-
-    /**
-     * Mock method for testing.
-     */
     public static function assertAssessableContent(array $expected, array $actual): void
     {
         // Mock implementation for testing

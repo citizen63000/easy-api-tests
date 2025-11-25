@@ -90,13 +90,17 @@ class ApiOutput
      */
     public function getHeaders(): ?ResponseHeaderBag
     {
-        return null !== $this->response ? $this->response->headers : null;
+        try {
+            return $this->response->headers;
+        } catch (\Error) {
+            return null;
+        }
     }
 
     public function getHeaderLine($key): ?string
     {
         $headers = $this->getHeaders();
 
-        return $headers ? $headers->get($key) : null;
+        return $headers?->get($key);
     }
 }

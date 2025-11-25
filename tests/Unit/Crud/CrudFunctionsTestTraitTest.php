@@ -76,55 +76,20 @@ class CrudFunctionsTestTraitTest extends TestCase
 
     public function testGetDataSentFileCreation(): void
     {
-        $tempDir = sys_get_temp_dir().'/crud_test_'.uniqid();
-        mkdir($tempDir, 0777, true);
+        // Test that the method exists and has correct signature
+        $this->assertTrue(method_exists($this, 'getDataSent'));
 
-        try {
-            // Use reflection to temporarily change the current dir for testing
-            $reflection = new \ReflectionClass($this);
-            $method = $reflection->getMethod('getCurrentDir');
-            $method->setAccessible(true);
+        $reflection = new \ReflectionMethod($this, 'getDataSent');
+        $parameters = $reflection->getParameters();
 
-            // Mock getCurrentDir to return our temp directory
-            $testTrait = new class extends TestCase {
-                use CrudFunctionsTestTrait;
-
-                protected static string $baseRouteName = 'test_entity';
-                protected static string $entityClass = 'App\\Entity\\TestEntity';
-                protected static string $identifier = 'id';
-
-                public function getCurrentDir(): string
-                {
-                    return func_get_arg(0); // Return the temp dir passed as argument
-                }
-
-                protected static function generateDataSentDefault(string $type): array
-                {
-                    return ['test' => 'default_data', 'type' => $type];
-                }
-            };
-
-            // Test would create file structure, but we'll just verify the method exists
-            $this->assertTrue(method_exists($testTrait, 'getDataSent'));
-        } finally {
-            // Clean up temp directory
-            if (is_dir($tempDir)) {
-                array_map('unlink', glob("$tempDir/*/*"));
-                array_map('rmdir', glob("$tempDir/*"));
-                rmdir($tempDir);
-            }
-        }
+        $this->assertSame('filename', $parameters[0]->getName());
+        $this->assertSame('type', $parameters[1]->getName());
+        $this->assertSame('defaultContent', $parameters[2]->getName());
     }
 
     public function testActionTypeConstants(): void
     {
-        $reflection = new \ReflectionClass(
-            \get_class(
-                new class extends TestCase {
-                    use CrudFunctionsTestTrait;
-                }
-            )
-        );
+        $reflection = new \ReflectionClass($this);
 
         $this->assertSame('Get', $reflection->getStaticPropertyValue('getActionType'));
         $this->assertSame('GetList', $reflection->getStaticPropertyValue('getListActionType'));

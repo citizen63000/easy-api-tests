@@ -32,7 +32,7 @@ class AuthenticationTestFunctionsTraitTest extends TestCase
     {
         static $container = null;
         if (null === $container) {
-            $test = new static();
+            $test = new static('test');
             $container = $test->createMock(ContainerInterface::class);
             $container->method('getParameter')
                 ->with('jwt_token_ttl')

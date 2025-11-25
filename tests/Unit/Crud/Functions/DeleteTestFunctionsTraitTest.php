@@ -70,11 +70,6 @@ class DeleteTestFunctionsTraitTest extends TestCase
         return new ApiOutput($response, 'application/json');
     }
 
-    public static function assertEquals($expected, $actual, string $message = ''): void
-    {
-        parent::assertEquals($expected, $actual, $message);
-    }
-
     protected static function assertApiProblemError(ApiOutput $apiOutput, int $statusCode, array $errors): void
     {
         static::assertSame($statusCode, $apiOutput->getStatusCode());

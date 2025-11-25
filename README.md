@@ -160,7 +160,7 @@ docker compose exec app composer test -- tests/Unit/Core/
 docker compose exec app composer test -- tests/Unit/Crud/
 ```
 
-#### Tests with detailed report
+#### Tests with a detailed report
 ```bash
 docker compose exec app composer test -- --testdox
 ```
