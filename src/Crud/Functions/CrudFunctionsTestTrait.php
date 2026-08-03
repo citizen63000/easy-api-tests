@@ -49,6 +49,13 @@ trait CrudFunctionsTestTrait
                 }
             }
 
+            // uuid assertion
+            if (self::$createActionType === $type) {
+                if (\array_key_exists('uuid', $result)) {
+                    $result['uuid'] = '\assertUUID()';
+                }
+            }
+
             file_put_contents($filePath, self::generateJson($result));
         }
 
