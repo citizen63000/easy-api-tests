@@ -139,7 +139,55 @@ Special values in expected responses (assessable functions, see `AbstractApiTest
 - `\assertUUID()` : uuid format assertion
 - `\assertRegex()`, `\assertId()`, `\assertFileUrl()`, `\assertFileName()` : regex / id / file assertions
 
-Additional functions can be registered with `addAdditionalAssessableFunction()` / `$additionalAssessableFunctions`.
+Additional functions can be registered: in `setUp()`, call `$this->addAdditionalAssessableFunction('assertMyCustom')` (or fill `$additionalAssessableFunctions`). The function must be a static method of the test class with the signature `assertMyCustom($key, $param, $value)` — it receives the expected value's parameter (optional) and the actual value, and must perform the assertion itself. It is then usable in the expected JSON files with the same `\assertMyCustom('param')` or `{assertMyCustom('param')}` syntax.
+
+#### Example `tests/` directory tree in a project
+
+```
+tests/
+├── AbstractApi.php                    # project base test class extending EasyApiTests\Core\AbstractApiTestCase
+│                                      #   (defines $schemas, $excludedTablesToClean, generateToken(), ...)
+├── bootstrap.php                      # phpunit bootstrap
+├── Functional/                        # functional tests, organized by domain then by resource
+│   └── Shop/                          # fictional domain "Shop"
+│       └── Product/
+│           ├── AbstractShopProduct.php      # abstract class for the resource: baseRouteName = 'shop_product',
+│           │                                #   entityClass = App\Entity\Shop\Product, $additionalInitFiles,
+│           │                                #   getRequiredFields()
+│           ├── PostTest.php                 # concrete test class: use CreateTestTrait;
+│           ├── GetTest.php                  #   use GetTestTrait;
+│           ├── GetListTest.php              #   use GetListTestTrait;
+│           ├── PutTest.php                  #   use UpdateTestTrait;
+│           ├── DeleteTest.php               #   use DeleteTestTrait;
+│           ├── GetDescribeFormTest.php      #   use GetDescribeFormTestTrait;
+│           ├── DataSent/                    # data sent with POST/PUT requests (auto-generated at first run, then edited & committed)
+│           │   ├── Create/
+│           │   │   ├── createWithAllFields.json
+│           │   │   └── createWithOnlyRequiredFields.json
+│           │   └── Update/
+│           │       └── updateWithAllFields.json
+│           └── Responses/                   # expected responses (auto-generated at first run with \assertDateTime()/\assertUUID(), then committed)
+│               ├── Create/                  #   createWithAllFields.json, createWithOnlyRequiredFields.json, ...
+│               ├── Get/                     #   nominalCase.json, ...
+│               ├── GetList/
+│               ├── Update/
+│               ├── Clone/
+│               ├── Download/
+│               └── DescribeForm/
+├── Unit/                              # unit tests (commands, services, ...)
+├── data/
+│   ├── csv/                           # fixtures, root of initFiles / $additionalInitFiles resolution
+│   │   ├── init.yml                   # default fixture file (initFiles = ['init.yml']): maps data files to table names
+│   │   │                              #   ex: default: { 'init/user.csv': 'user' }  (the value = table name is mandatory)
+│   │   ├── init/                      # csv/sql files referenced by init.yml (user.csv, category.csv, ...)
+│   │   └── App/                       # per-entity fixture yml + csv, loaded via $additionalInitFiles
+│   │       └── Shop/
+│   │           └── Product/
+│   │               ├── Product.yml          #   default: { 'App/Shop/Product/product.csv': 'product' }
+│   │               └── product.csv          # csv named after the table; header line = column names
+│   └── artifacts/                     # files uploaded during tests (FileBag), under tests/artifacts at runtime
+└── templates/                         # twig templates used by tests (mails, ...)
+```
 
 ### 6. Loading Test Data (fixtures)
 
