@@ -280,6 +280,16 @@ trait ApiTestAssertionsTrait
     }
 
     /**
+     * Test if the value is a positive integer id
+     * Usage : assertId().
+     */
+    protected static function assertId($key, $expected, $value): void
+    {
+        static::assertIsInt($value, "assertId : {$key} is not an integer (value: ".var_export($value, true).')');
+        static::assertGreaterThan(0, $value, "assertId : {$key} must be > 0 (value: {$value})");
+    }
+
+    /**
      * Checks that $actual contains at least all fields from $expected with the same values recursively.
      *
      * @param array  $expected Expected data (subset)

@@ -62,6 +62,7 @@ abstract class AbstractApiTestCase extends WebTestCase
         'assertFileName',
         'assertUUID',
         'assertRegex',
+        'assertId',
     ];
 
     // endregion
