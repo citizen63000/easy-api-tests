@@ -8,5 +8,4 @@
 docker-compose.yml export-ignore
 Dockerfile export-ignore
 phpunit.xml* export-ignore
-README.md export-ignore
 tests/ export-ignore
