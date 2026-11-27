@@ -24,12 +24,16 @@ trait CreateTestFunctionsTrait
         static::assertEquals(Response::HTTP_CREATED, $apiOutput->getStatusCode());
         $result = $apiOutput->getData();
         $expectedResult = $this->getExpectedResponse($filename, static::$createActionType, $result, true);
+        // Capturé avant assertAssessableContent : celui-ci unset les placeholders
+        // (\assertId(), \assertUUID()...) de $expectedResult ET de $result après validation.
+        $createdId = $result['id'] ?? null;
         static::assertAssessableContent($expectedResult, $result);
         static::assertEquals($expectedResult, $result, "Assert failed for file {$filename}");
 
-        // Get after create
+        // Get after create : utilise le vrai id retourné par le POST (le fichier attendu
+        // contient le placeholder \assertId(), illisible dans une URL)
         if ($testGetAfterCreate) {
-            $this->doTestGetAfterSave($expectedResult['id'], $filename, $userLogin);
+            $this->doTestGetAfterSave($createdId ?? ($expectedResult['id'] ?? null), $filename, $userLogin);
         }
     }
 
